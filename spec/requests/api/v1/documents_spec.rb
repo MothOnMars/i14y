@@ -216,13 +216,16 @@ describe API::V1::Documents do
 
   describe "PUT /api/v1/documents/{document_id}" do
     let(:update_params) do
-      { "title" => "my title",
+      {
+        "title" => "my title",
         "description" => "new desc",
         "content" => "new content",
         "path" => "http://www.next.gov/updated.html",
         "promote" => false,
         "tags" => "My category",
-        "changed" => "2016-01-01T10:00:01Z" }
+        "changed" => "2016-01-01T10:00:01Z",
+        "click_count" => "1000"
+      }
 
     end
 
@@ -247,6 +250,7 @@ describe API::V1::Documents do
         expect(document.content).to eq('new content')
         expect(document.tags).to match_array(['my category'])
         expect(document.changed).to eq('2016-01-01T10:00:01Z')
+        expect(document.click_count).to eq(1000)
       end
 
       it_behaves_like 'a data modifying request made during read-only mode'
