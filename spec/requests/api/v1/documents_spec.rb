@@ -217,16 +217,15 @@ describe API::V1::Documents do
   describe "PUT /api/v1/documents/{document_id}" do
     let(:update_params) do
       {
-        "title" => "my title",
-        "description" => "new desc",
-        "content" => "new content",
-        "path" => "http://www.next.gov/updated.html",
-        "promote" => false,
-        "tags" => "My category",
-        "changed" => "2016-01-01T10:00:01Z",
-        "click_count" => "1000"
+        title: "new title",
+        description: "new desc",
+        content: "new content",
+        path: "http://www.next.gov/updated.html",
+        promote: false,
+        tags: "new category",
+        changed: "2016-01-01T10:00:01Z",
+        click_count: "1000"
       }
-
     end
 
     context 'success case' do
@@ -245,10 +244,10 @@ describe API::V1::Documents do
         document = Document.find(id)
         expect(document.path).to eq("http://www.next.gov/updated.html")
         expect(document.promote).to be_falsey
-        expect(document.title).to eq('my title')
+        expect(document.title).to eq('new title')
         expect(document.description).to eq('new desc')
         expect(document.content).to eq('new content')
-        expect(document.tags).to match_array(['my category'])
+        expect(document.tags).to match_array(['new category'])
         expect(document.changed).to eq('2016-01-01T10:00:01Z')
         expect(document.click_count).to eq(1000)
       end
