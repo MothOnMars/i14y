@@ -49,7 +49,8 @@ def remote_reindex(index)
                                  wait_for_completion: false))['task']
   #TODO: report progress
   while reindex_task(task_id)['completed'] == false
-    puts("Reindex in progress: #{index}: #{task_id}")
+    task = reindex_task(task_id)
+    puts("Reindex in progress: #{index}: #{task_id}: #{task['task']['status']['created']}/#{task['task']['status']['total']}")
     sleep 10
   end
   puts("Reindex complete: #{index}")
