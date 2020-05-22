@@ -7,9 +7,6 @@ i14y
 
 Search engine for agencies' published content
 
-
-docker-compose build web
-
 ## Dependencies/Prerequisistes
 - Elasticsearch 6.8+:
 
@@ -67,7 +64,7 @@ If you ever want to start from scratch with your indexes/templates, you can clea
 $ rails s -p 8081
 ```
 
--- Alternatively, run the server in a Docker container:
+-- Alternatively, run the i14y Rails application in a Docker container:
 ```
 $ docker-compose up web
 ```
@@ -75,7 +72,7 @@ You should see the default Rails index page on http://localhost:8081/.
 
 ## Tests
 
-`bundle exec rake`
+`$ rake`
 
 Alternatively, you can use Docker for your test environment:
 ```
