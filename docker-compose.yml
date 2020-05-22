@@ -10,6 +10,8 @@ services:
       - '8081:8081'
     volumes:
       - .:/usr/src/app
+    environment:
+      - ES_HOST=elasticsearch:9200
 
   elasticsearch:
     build:

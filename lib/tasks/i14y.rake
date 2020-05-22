@@ -7,8 +7,7 @@ namespace :i14y do
       template_generator = klass.new
       Elasticsearch::Persistence.client.indices.put_template(name: entity_name,
                                                              body: template_generator.body,
-                                                             order: 0,
-                                                             create: true)
+                                                             order: 0)
     end
     es_collections_index_name = [Collection.index_namespace, 'v1'].join('-')
     Collection.create_index!(index: es_collections_index_name)
