@@ -8,7 +8,8 @@ i14y
 Search engine for agencies' published content
 
 ## Dependencies/Prerequisistes
-- Elasticsearch 6.8+:
+
+### Elasticsearch
 
 You can run Elasticsearch using Docker:
 ```
@@ -39,7 +40,8 @@ $ curl localhost:9268
 }
 ```
 
-- Kibana
+### Kibana
+
 Kibana is not required, but it can very helpful for debugging your Elasticsearch cluster or data.
 You can also run Kibana using Docker:
 ```
@@ -64,11 +66,45 @@ If you ever want to start from scratch with your indexes/templates, you can clea
 $ rails s -p 8081
 ```
 
--- Alternatively, run the i14y Rails application in a Docker container:
+Alternatively, run the i14y Rails application in a Docker container:
 ```
 $ docker-compose up web
 ```
 You should see the default Rails index page on http://localhost:8081/.
+
+## Basic Usage
+
+### Create a collection for storing documents
+```
+$ curl -u dev:devpwd -XPOST http://localhost:8081/api/v1/collections \
+> -H "Content-Type:application/json" -d \
+> '{"handle":"test_collection","description":"my test collection","token":"test_collection_token"}'
+{"status":200,"developer_message":"OK","user_message":"Your collection was successfully created."}
+```
+
+### Create a document within that collection, using the collection
+handle and token for authorization:
+```
+curl http://localhost:8081/api/v1/documents \
+  -XPOST \
+  -H "Content-Type:application/json" \
+  -u test_collection:test_collection_token \
+  -d '{"document_id":"1",
+      "title":"a doc about rutabagas",
+      "path": "http://www.foo.gov/rutabagas.html",
+      "created": "2020-05-12T22:35:09Z",
+      "description":"Lots of very important info on rutabagas",
+      "content":"rutabagas",
+      "promote": false,
+      "language" : "en",
+      "tags" : "tag1, another tag"
+      }'
+```
+
+### Search for a document within a collection
+```
+$ curl -u dev:devpwd http://localhost:8081/api/v1/collections/search?handles=test_collection&query=rutabaga
+```
 
 ## Tests
 
