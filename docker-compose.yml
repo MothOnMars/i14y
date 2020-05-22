@@ -3,6 +3,8 @@ version: '3.8'
 services:
   web:
     build: .
+    depends_on:
+      - elasticsearch
     command: bin/rails server --port 8081 --binding 0.0.0.0
     ports:
       - '8081:8081'
@@ -26,8 +28,6 @@ services:
       - es_data:/usr/share/elasticsearch/data
     ports:
       - 9268:9200
-    networks:
-      - elastic
 
   kibana:
     image: docker.elastic.co/kibana/kibana:6.8.7
@@ -37,11 +37,6 @@ services:
       - 5668:5601
     environment:
       - ELASTICSEARCH_HOSTS=http://elasticsearch:9200
-    networks:
-      - elastic
 
 volumes:
   es_data:
-
-networks:
-  elastic:

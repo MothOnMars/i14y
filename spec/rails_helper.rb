@@ -33,6 +33,8 @@ RSpec.configure do |config|
 
   config.before(:suite) do
     require 'test_services'
+    Rails.application.load_tasks
+    Rake::Task['i14y:setup'].invoke
     TestServices::delete_es_indexes
     TestServices::create_es_indexes
   end
