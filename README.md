@@ -79,7 +79,6 @@ You should see the default Rails index page on http://localhost:8081/.
 $ curl -u dev:devpwd -XPOST http://localhost:8081/api/v1/collections \
 > -H "Content-Type:application/json" -d \
 > '{"handle":"test_collection","description":"my test collection","token":"test_collection_token"}'
-{"status":200,"developer_message":"OK","user_message":"Your collection was successfully created."}
 ```
 
 ### Create a document within that collection, using the collection
