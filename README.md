@@ -61,10 +61,24 @@ http://localhost:5668/
 If you ever want to start from scratch with your indexes/templates, you can clear everything out:
 `bundle exec rake i14y:clear_all`
 
+- Run the Rails server on port 8081 for compatibility with the
+  search-gov app:
+```
+$ rails s -p 8081
+```
+
+-- Alternatively, run the server in a Docker container:
+```
+$ docker-compose up web
+```
+You should see the default Rails index page on http://localhost:8081/.
+
 ## Tests
 
 `bundle exec rake`
 
-## Deployment
-- Update your `config/secrets.yml` file in the deployment directory for `/i14y/shared/config`. This will get copied into the current release directory on deployment.
-- Update your `config/newrelic.yml` file in the deployment directory for `/i14y/shared/config`. This will get copied into the current release directory on deployment.
+Alternatively, you can use Docker for your test environment:
+```
+$ docker-compose up -d web
+$ docker-compose exec web rake
+```
