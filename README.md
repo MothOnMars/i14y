@@ -7,57 +7,49 @@ i14y
 
 Search engine for agencies' published content
 
+
+docker-compose build web
+
 ## Dependencies/Prerequisistes
-- Install Elasticsearch 5.6+:
+- Elasticsearch 6.8+:
+
+You can run Elasticsearch using Docker:
 ```
-$ brew search elasticsearch
-$ brew install elasticsearch@5.6
+$ docker-compose up elasticsearch
 ```
 
-To allow ES 5.6 to run in parallel with another version of Elasticsearch in development and test environments, we run I14y on port 9256 instead of the default port 9200. You'll need to specify the port, cluster name, and node name for your 5.6 cluster:
+Verify that Elasticsearch 6.8.x is running on port 9268 (we use 9268
+instead of the default 9200 to simplify development when running
+multiple versions of Elasticsearch):
 ```
-$ vi /usr/local/Cellar/elasticsearch@5.6/<specific version>/libexec/config/elasticsearch.yml
-  
-  cluster.name: elasticsearch_56
-  node.name: "es56"
-  http.port: 9256
-```
-
-- You'll need Java 7+ to run the included `stream2es` utility that handles copying data from one index version to the next.
-Run `java -version` to make sure.
-
-- Your Elasticsearch cluster needs the [ICU analysis plugin](https://github.com/elastic/elasticsearch-analysis-icu) and
-the [Kuromoji analysis plugin](https://github.com/elastic/elasticsearch-analysis-kuromoji/blob/master/README.md) and
-the [Smart Chinese Analysis Plugin](https://github.com/elastic/elasticsearch-analysis-smartcn) installed:
-
-```
-$ /usr/local/opt/elasticsearch@5.6/libexec/bin/elasticsearch-plugin install analysis-kuromoji
-$ /usr/local/opt/elasticsearch@5.6/libexec/bin/elasticsearch-plugin install analysis-icu
-$ /usr/local/opt/elasticsearch@5.6/libexec/bin/elasticsearch-plugin install analysis-smartcn
-```
-
-Be sure to restart Elasticsearch after you have installed the plugins:
-```
-$ brew services restart elasticsearch@5.6
-```
-
-Verify that Elasticsearch 5.6.x is running on port 9256:
-```
-$ curl localhost:9256
+$ curl localhost:9268
 {
-  "name" : "es56",
-  "cluster_name" : "elasticsearch_56",
-  "cluster_uuid" : "IhVLFTNYQj6Ac6Xi4Uegmg",
+  "name" : "wp9TsCe",
+  "cluster_name" : "docker-cluster",
+  "cluster_uuid" : "WGf_peYTTZarT49AtEgc3g",
   "version" : {
-    "number" : "5.6.9",
-    "build_hash" : "877a590",
-    "build_date" : "2018-04-12T16:25:14.838Z",
+    "number" : "6.8.7",
+    "build_flavor" : "default",
+    "build_type" : "docker",
+    "build_hash" : "c63e621",
+    "build_date" : "2020-02-26T14:38:01.193138Z",
     "build_snapshot" : false,
-    "lucene_version" : "6.6.1"
+    "lucene_version" : "7.7.2",
+    "minimum_wire_compatibility_version" : "5.6.0",
+    "minimum_index_compatibility_version" : "5.0.0"
   },
   "tagline" : "You Know, for Search"
 }
 ```
+
+- Kibana
+Kibana is not required, but it can very helpful for debugging your Elasticsearch cluster or data.
+You can also run Kibana using Docker:
+```
+$ docker-compose up kibana
+```
+Verify that you can access Kibana in your browser:
+http://localhost:5668/
 
 ## Development
 
@@ -74,9 +66,5 @@ If you ever want to start from scratch with your indexes/templates, you can clea
 `bundle exec rake`
 
 ## Deployment
-
-- Set your Airbrake api key in `config/airbrake.yml` in the deployment directory for `/i14y/shared/config`. This will get copied into the current release directory on deployment.
 - Update your `config/secrets.yml` file in the deployment directory for `/i14y/shared/config`. This will get copied into the current release directory on deployment.
 - Update your `config/newrelic.yml` file in the deployment directory for `/i14y/shared/config`. This will get copied into the current release directory on deployment.
-- `bundle exec cap staging deploy` to deploy to a staging environment
-- `bundle exec cap production deploy` to deploy to a production environment
