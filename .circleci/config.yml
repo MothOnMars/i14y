@@ -6,7 +6,7 @@ executors:
       - image: circleci/ruby:${RUBY_VERSION}-node-browsers
     working_directory: ~/app
     environment:
-      ES_VER: 6.8.6
+      ES_VER: 7.9.1
 
 jobs:
   build:
@@ -83,3 +83,6 @@ workflows:
       - build:
           name: 'ruby 2.7.0'
           ruby_version: 2.7.0
+            #test thsi out: https://github.com/justinmayer/virtualfish/blob/aa3d6271bcb86ad27b6d24f96b5bd386d176f588/.circleci/config.yml
+            #https://circleci.com/docs/2.0/configuration-reference/#matrix-requires-version-21
+            #https://circleci.com/blog/circleci-matrix-jobs/
