@@ -5,6 +5,8 @@ namespace :i14y do
       entity_name = File.basename(template_generator, '.rb')
       klass = entity_name.camelize.constantize
       template_generator = klass.new
+      puts "creating template for #{klass}"
+      pp JSON.parse template_generator.body
       Elasticsearch::Persistence.client.indices.put_template(name: entity_name,
                                                              body: template_generator.body,
                                                              order: 0,
