@@ -13,10 +13,10 @@ gem 'capistrano-passenger', '~> 0.2.0'
 
 gem "elasticsearch-persistence", '~> 5.0', require: 'elasticsearch/persistence/model'
 gem 'elasticsearch' #, '5.0.4'
-gem 'elasticsearch-model', '~> 6.0'
+#gem 'elasticsearch-model', '~> 6.0' #this isnt' needed
 gem 'elasticsearch-dsl'#, '~> 0.1.5'
-gem 'elasticsearch-transport', '~> 6.0'
-gem 'elasticsearch-api', '~> 6.0'
+#gem 'elasticsearch-transport', '~> 6.0'
+#gem 'elasticsearch-api', '~> 6.0'
 
 gem 'newrelic_rpm', '~> 4.2'
 gem 'airbrake', '~> 7.1'
