@@ -1,10 +1,12 @@
+require 'active_model'
+
 class Collection
-  include Elasticsearch::Persistence::Model
-  extend NamespacedIndex
+  #include Elasticsearch::Persistence::Model
+    include ActiveModel::Model
+  include ActiveModel::Validations
+  extend ActiveModel::Callbacks
+include Virtus.model
 
-  settings index: { number_of_shards: 1 }
-
-  index_name index_namespace
   attribute :token, String, mapping: { type: 'keyword' }
   validates :token, presence: true
 
