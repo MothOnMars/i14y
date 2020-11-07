@@ -297,7 +297,7 @@ DEPENDENCIES
   codeclimate-test-reporter (~> 1.0.8)
   elasticsearch (~> 6.0)
   elasticsearch-api (~> 6.0)
-  elasticsearch-dsl
+  elasticsearch-dsl (~> 0.1.9)
   elasticsearch-persistence (~> 5.0)
   elasticsearch-transport (~> 6.0)
   faker (~> 1.7)
