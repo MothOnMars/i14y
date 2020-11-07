@@ -181,7 +181,6 @@ GEM
     parallel (1.19.2)
     parser (2.7.2.0)
       ast (~> 2.4.1)
-    patron (0.10.0)
     powerpack (0.1.2)
     pry (0.13.1)
       coderay (~> 1.1)
@@ -307,7 +306,6 @@ DEPENDENCIES
   listen
   mry (~> 0.52.0)
   newrelic_rpm (~> 4.2)
-  patron (~> 0.10.0)
   pry-byebug (~> 3.4)
   pry-rails (~> 0.3)
   puma (~> 4.3)

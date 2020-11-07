@@ -25,7 +25,7 @@ gem 'elasticsearch-api', '~> 6.0' #not needed
 gem 'newrelic_rpm', '~> 4.2'
 gem 'airbrake', '~> 7.1'
 
-gem 'patron', '~> 0.10.0'
+#gem 'patron', '~> 0.10.0'
 
 group :development, :test do
   gem 'rspec-rails', '~> 3.7'
