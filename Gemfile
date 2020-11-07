@@ -22,7 +22,7 @@ gem "elasticsearch-persistence", '~> 6.0'#, require: 'elasticsearch/persistence/
 gem 'elasticsearch', '~> 6.0' #, '5.0.4'
 gem 'elasticsearch-model', '~> 6.0' #this isnt' needed - dependency of es persistence
 gem 'elasticsearch-dsl', '~> 0.1.9'
-gem 'elasticsearch-transport', '~> 6.0' #not needed 
+gem 'elasticsearch-transport', '~> 6.0' #not needed
 gem 'elasticsearch-api', '~> 6.0' #not needed
 
 gem 'newrelic_rpm', '~> 4.2'

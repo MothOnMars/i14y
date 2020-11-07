@@ -1,10 +1,10 @@
 class Document
-  include Elasticsearch::Persistence::Model
+ # include Elasticsearch::Persistence::Model
   extend NamespacedIndex
+ #   include ActiveModel::Model
+  #include ActiveModel::Validations
 
-  settings index: { number_of_shards: 1 }
-
-  index_name index_namespace
+  
 
   attribute :path, String, mapping: { type: 'keyword' }
   validates :path, presence: true
