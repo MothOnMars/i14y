@@ -16,7 +16,7 @@ gem 'capistrano-passenger', '~> 0.2.0'
 # elasticsearch-transport, which provides a low-level Ruby client for connecting to an Elasticsearch cluster
 #elasticsearch-api, which provides a Ruby API for the Elasticsearch RESTful API
 gem "elasticsearch-persistence", '~> 5.0', require: 'elasticsearch/persistence/model'
-gem 'elasticsearch' #, '5.0.4'
+gem 'elasticsearch', '~> 6.0' #, '5.0.4'
 #gem 'elasticsearch-model', '~> 6.0' #this isnt' needed
 gem 'elasticsearch-dsl'#, '~> 0.1.5'
 gem 'elasticsearch-transport', '~> 6.0' #not needed
