@@ -17,7 +17,7 @@ describe API::V1::Documents, elasticsearch: true  do
     valid_collection_session = { HTTP_AUTHORIZATION: credentials }
     valid_collection_params = { handle: 'test_index', token: 'test_key' }
     post '/api/v1/collections', params: valid_collection_params, headers: valid_collection_session
-    Document.index_name = Document.index_namespace('test_index')
+    Document.index_name = DocumentRepository.index_namespace('test_index')
   end
 
   before do

@@ -18,15 +18,29 @@ describe DocumentSearch do
   end
   let(:document_search) { DocumentSearch.new(search_options) }
   let(:document_search_results) { document_search.search }
+    let(:yaml) do
+    YAML.load_file("#{Rails.root}/config/elasticsearch.yml").presence
+  end
+  let(:client) do
+    Elasticsearch::Client.new(log: Rails.env.development?,
+                                                              hosts: yaml['hosts'],
+                                                              user: yaml['user'],
+                                                              password: yaml['password'],
+                                                              randomize_hosts: true,
+                                                              retry_on_failure: true,
+                                                              reload_connections: true)
+
+  end
+
 
   before do
-    Elasticsearch::Persistence.client.indices.delete(index: [Document.index_namespace('agency_blogs'), '*'].join('-'))
+    client.indices.delete(index: [Document.index_namespace('agency_blogs'), '*'].join('-'))
     es_documents_index_name = [Document.index_namespace('agency_blogs'), 'v1'].join('-')
     #Using a single shard prevents intermittent relevancy issues in tests
     #https://www.elastic.co/guide/en/elasticsearch/guide/current/relevance-is-broken.html
     Document.settings(index: { number_of_shards: 1 })
     Document.create_index!(index: es_documents_index_name)
-    Elasticsearch::Persistence.client.indices.put_alias index: es_documents_index_name,
+    client.indices.put_alias index: es_documents_index_name,
                                                         name: Document.index_namespace('agency_blogs')
     Document.index_name = Document.index_namespace('agency_blogs')
   end
@@ -97,7 +111,7 @@ describe DocumentSearch do
       let(:query) { 'uh oh' }
       let(:error) { StandardError.new('something went wrong') }
 
-      before { allow(Elasticsearch::Persistence.client).to receive(:search).and_raise(error) }
+      before { allow(client).to receive(:search).and_raise(error) }
 
       it 'returns a no results response' do
         expect(document_search_results.total).to eq(0)
@@ -152,7 +166,7 @@ describe DocumentSearch do
       Document.refresh_index!
       es_documents_index_name = [Document.index_namespace('other_agency_blogs'), 'v1'].join('-')
       Document.create_index!(index: es_documents_index_name)
-      Elasticsearch::Persistence.client.indices.put_alias index: es_documents_index_name,
+      client.indices.put_alias index: es_documents_index_name,
                                                           name: Document.index_namespace('other_agency_blogs')
       Document.index_name = Document.index_namespace('other_agency_blogs')
       Document.create(language: 'en', title: 'other title 1 common content', description: 'other description 1 common content', created: DateTime.now, path: 'http://www.otheragency.gov/page1.html')

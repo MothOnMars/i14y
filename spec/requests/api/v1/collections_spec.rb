@@ -13,6 +13,19 @@ describe API::V1::Collections do
   end
   let(:allow_updates) { true }
   let(:maintenance_message) { nil }
+  let(:yaml) do
+    YAML.load_file("#{Rails.root}/config/elasticsearch.yml").presence
+  end
+  let(:client) do
+    Elasticsearch::Client.new(log: Rails.env.development?,
+                                                              hosts: yaml['hosts'],
+                                                              user: yaml['user'],
+                                                              password: yaml['password'],
+                                                              randomize_hosts: true,
+                                                              retry_on_failure: true,
+                                                              reload_connections: true)
+
+  end
 
   before do
     I14y::Application.config.updates_allowed = allow_updates
@@ -26,7 +39,16 @@ describe API::V1::Collections do
   describe 'POST /api/v1/collections' do
     context 'success case' do
       before do
-        Elasticsearch::Persistence.client.delete_by_query(
+        
+    client = Elasticsearch::Client.new(log: Rails.env.development?,
+                                                              hosts: yaml['hosts'],
+                                                              user: yaml['user'],
+                                                              password: yaml['password'],
+                                                              randomize_hosts: true,
+                                                              retry_on_failure: true,
+                                                              reload_connections: true)
+
+        client.delete_by_query(
           index: Collection.index_name,
           q: '*:*',
           conflicts: 'proceed'
@@ -150,10 +172,19 @@ describe API::V1::Collections do
   describe 'GET /api/v1/collections/{handle}' do
     context 'success case' do
       before do
-        Elasticsearch::Persistence.client.delete_by_query index: Collection.index_name, q: '*:*', conflicts: 'proceed'
+        
+    client = Elasticsearch::Client.new(log: Rails.env.development?,
+                                                              hosts: yaml['hosts'],
+                                                              user: yaml['user'],
+                                                              password: yaml['password'],
+                                                              randomize_hosts: true,
+                                                              retry_on_failure: true,
+                                                              reload_connections: true)
+
+        client.delete_by_query index: Collection.index_name, q: '*:*', conflicts: 'proceed'
         post '/api/v1/collections', params: valid_params, headers: valid_session
-        Document.index_name = Document.index_namespace('agency_blogs')
-        Elasticsearch::Persistence.client.delete_by_query index: Document.index_name, q: '*:*', conflicts: 'proceed'
+        Document.index_name = DocumentRepository.index_namespace('agency_blogs')
+        client.delete_by_query index: Document.index_name, q: '*:*', conflicts: 'proceed'
       end
 
       let(:datetime) { DateTime.now.utc }
@@ -300,10 +331,10 @@ describe API::V1::Collections do
 
     context 'no results' do
       before do
-        Elasticsearch::Persistence.client.delete_by_query index: Collection.index_name, q: '*:*', conflicts: 'proceed'
+        client.delete_by_query index: Collection.index_name, q: '*:*', conflicts: 'proceed'
         post '/api/v1/collections', params: valid_params, headers: valid_session
         Document.index_name = Document.index_namespace('agency_blogs')
-        Elasticsearch::Persistence.client.delete_by_query index: Document.index_name, q: '*:*', conflicts: 'proceed'
+        client.delete_by_query index: Document.index_name, q: '*:*', conflicts: 'proceed'
       end
 
       it 'returns JSON no hits results' do
@@ -343,7 +374,7 @@ describe API::V1::Collections do
       end
 
       before do
-        Elasticsearch::Persistence.client.delete_by_query index: Collection.index_name, q: '*:*', conflicts: 'proceed'
+        client.delete_by_query index: Collection.index_name, q: '*:*', conflicts: 'proceed'
         Collection.create(_id: 'agency_blogs', token: 'secret')
         get '/api/v1/collections/search', params: bad_handle_params, headers: valid_session
       end

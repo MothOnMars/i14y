@@ -16,20 +16,42 @@ describe Document do
     }
   end
 
+  let(:client) do
+    yaml = YAML.load_file("#{Rails.root}/config/elasticsearch.yml").presence
+
+        Elasticsearch::Client.new(log: Rails.env.development?,
+                                                              hosts: yaml['hosts'],
+                                                              user: yaml['user'],
+                                                              password: yaml['password'],
+                                                              randomize_hosts: true,
+                                                              retry_on_failure: true,
+                                                              reload_connections: true)
+
+  end
+
   before(:all) do
     handle = 'test_index'
-    Elasticsearch::Persistence.client.indices.delete(
+    client.indices.delete(
       index: [Document.index_namespace(handle), '*'].join('-')
     )
     es_documents_index_name = [Document.index_namespace(handle), 'v1'].join('-')
     Document.create_index!(index: es_documents_index_name)
-    Elasticsearch::Persistence.client.indices.put_alias index: es_documents_index_name,
+    client.indices.put_alias index: es_documents_index_name,
                                                         name: Document.index_namespace(handle)
     Document.index_name = Document.index_namespace(handle)
   end
 
   after(:all) do
-    Elasticsearch::Persistence.client.indices.delete(
+    yaml = YAML.load_file("#{Rails.root}/config/elasticsearch.yml").presence
+
+    client = Elasticsearch::Client.new(log: Rails.env.development?,
+                                                              hosts: yaml['hosts'],
+                                                              user: yaml['user'],
+                                                              password: yaml['password'],
+                                                              randomize_hosts: true,
+                                                              retry_on_failure: true,
+                                                              reload_connections: true)
+    client.indices.delete(
       index: [Document.index_namespace('test_index'), '*'].join('-')
     )
   end
