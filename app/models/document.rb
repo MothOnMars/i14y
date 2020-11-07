@@ -1,4 +1,5 @@
 require 'active_model' #remove?
+#require 'active_model/callbacks'
 
 class Document
   include ActiveModel::Model
@@ -10,7 +11,7 @@ class Document
  # include ActiveModel::Model
  #   include ActiveModel::Model
 
-  
+  define_model_callbacks :save
 
   attribute :path, String, mapping: { type: 'keyword' }
   validates :path, presence: true
