@@ -1,6 +1,7 @@
 source 'https://rubygems.org'
 gem 'rails', ' ~> 5.2.0'
-
+#TODO: REMOVE NON API GEMS
+#TODO: REMOVE RACK-CORS?, newrelic, capistrano...
 gem 'rack-cors', '~> 1.0.5'
 gem 'grape', '~> 1.3.2'
 
@@ -17,7 +18,7 @@ gem 'capistrano-passenger', '~> 0.2.0'
 #elasticsearch-api, which provides a Ruby API for the Elasticsearch RESTful API
 #
 # Upgrade guide: https://www.elastic.co/blog/activerecord-to-repository-changing-persistence-patterns-with-the-elasticsearch-rails-gem
-gem "elasticsearch-persistence", '~> 6.0', require: 'elasticsearch/persistence/model'
+gem "elasticsearch-persistence", '~> 6.0'#, require: 'elasticsearch/persistence/model'
 gem 'elasticsearch', '~> 6.0' #, '5.0.4'
 gem 'elasticsearch-model', '~> 6.0' #this isnt' needed - dependency of es persistence
 gem 'elasticsearch-dsl', '~> 0.1.9'
