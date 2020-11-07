@@ -15,7 +15,9 @@ gem 'capistrano-passenger', '~> 0.2.0'
 #The elasticsearch library is a wrapper for two separate libraries:
 # elasticsearch-transport, which provides a low-level Ruby client for connecting to an Elasticsearch cluster
 #elasticsearch-api, which provides a Ruby API for the Elasticsearch RESTful API
-gem "elasticsearch-persistence", '~> 5.0', require: 'elasticsearch/persistence/model'
+#
+# Upgrade guide: https://www.elastic.co/blog/activerecord-to-repository-changing-persistence-patterns-with-the-elasticsearch-rails-gem
+gem "elasticsearch-persistence", '~> 6.0', require: 'elasticsearch/persistence/model'
 gem 'elasticsearch', '~> 6.0' #, '5.0.4'
 gem 'elasticsearch-model', '~> 6.0' #this isnt' needed - dependency of es persistence
 gem 'elasticsearch-dsl', '~> 0.1.9'
