@@ -24,6 +24,7 @@ gem 'elasticsearch-model', '~> 6.0' #this isnt' needed - dependency of es persis
 gem 'elasticsearch-dsl', '~> 0.1.9'
 gem 'elasticsearch-transport', '~> 6.0' #not needed
 gem 'elasticsearch-api', '~> 6.0' #not needed
+gem 'virtus'
 
 gem 'newrelic_rpm', '~> 4.2'
 gem 'airbrake', '~> 7.1'

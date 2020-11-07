@@ -1,8 +1,14 @@
+require 'active_model' #remove?
+
 class Document
+  include ActiveModel::Model
+  include ActiveModel::Validations
+  extend ActiveModel::Callbacks
  # include Elasticsearch::Persistence::Model
+  include Virtus.model
   extend NamespacedIndex
+ # include ActiveModel::Model
  #   include ActiveModel::Model
-  #include ActiveModel::Validations
 
   
 
