@@ -6,7 +6,7 @@ class DocumentRepository
 
   klass Document
 
-  index_name index_namespace
+  index_name Document.index_namespace #FIXME
  client DEFAULT_CLIENT
 
   settings index: { number_of_shards: 1 }
