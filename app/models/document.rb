@@ -6,14 +6,14 @@ require 'active_model' #remove?
 class Document
   include ActiveModel::Model
   include ActiveModel::Validations
-  extend ActiveModel::Callbacks
+  extend ActiveModel::Callbacks #delete me?
   extend NamespacedIndex
  # include Elasticsearch::Persistence::Model
   include Virtus.model
  # include ActiveModel::Model
  #   include ActiveModel::Model
 
-  define_model_callbacks :save
+  define_model_callbacks :save #delete me?
 
   #delegate :category, to: :video
   delegate :index_namespace, to: DocumentRepository
