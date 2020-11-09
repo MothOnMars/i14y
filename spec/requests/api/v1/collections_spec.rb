@@ -37,18 +37,9 @@ describe API::V1::Collections do
     I14y::Application.config.updates_allowed = true
   end
 
-  pending 'POST /api/v1/collections' do
+  describe 'POST /api/v1/collections' do
     context 'success case' do
       before do
-        
-    client = Elasticsearch::Client.new(log: Rails.env.development?,
-                                                              hosts: yaml['hosts'],
-                                                              user: yaml['user'],
-                                                              password: yaml['password'],
-                                                              randomize_hosts: true,
-                                                              retry_on_failure: true,
-                                                              reload_connections: true)
-
         client.delete_by_query(
           index: repository.index_name,
           q: '*:*',
@@ -128,7 +119,7 @@ describe API::V1::Collections do
       end
     end
 
-    context 'something terrible happens' do
+    pending 'something terrible happens' do
       before do
         allow(Collection).to receive(:create) { raise_error(Exception) }
         post '/api/v1/collections', params: valid_params, headers: valid_session
@@ -170,7 +161,7 @@ describe API::V1::Collections do
     end
   end
 
-  pending 'GET /api/v1/collections/{handle}' do
+  describe 'GET /api/v1/collections/{handle}' do
     context 'success case' do
       before do
         #FIXME: DRY UP
