@@ -147,7 +147,7 @@ describe API::V1::Collections do
   describe 'DELETE /api/v1/collections/{handle}' do
     context 'success case' do
       before do
-        Elasticsearch::Persistence.client.delete_by_query index: Collection.index_name, q: '*:*', conflicts: 'proceed'
+        client.delete_by_query index: Collection.index_name, q: '*:*', conflicts: 'proceed'
         Collection.create(_id: 'agency_blogs', token: 'secret')
         delete '/api/v1/collections/agency_blogs', headers: valid_session
       end
