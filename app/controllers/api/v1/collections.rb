@@ -60,9 +60,9 @@ module API
         delete ':handle' do
           check_updates_allowed
           handle = params.delete(:handle)
-          collection = Collection.find(handle)
-          error!(collection.errors.messages, 400) unless collection.destroy
-          Elasticsearch::Persistence.client.indices.delete(index: [Document.index_namespace(handle), '*'].join('-'))
+          error!(collection.errors.messages, 400) unless CollectionRepository.new.delete(handle)
+          #todo: this with a delete_index
+          DEFAULT_CLIENT.indices.delete(index: [Document.index_namespace(handle), '*'].join('-'))
           ok("Your collection was successfully deleted.")
         end
 
@@ -133,7 +133,7 @@ module API
         desc "Get collection info and stats"
         get ':handle' do
           handle = params.delete(:handle)
-          collection = Collection.find(handle)
+          collection = CollectionRepository.new.find(handle)
           { status: 200, developer_message: "OK" }.merge(collection.as_json(root: true, methods: [:document_total, :last_document_sent]))
         end
       end

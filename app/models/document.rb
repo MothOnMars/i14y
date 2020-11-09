@@ -16,7 +16,7 @@ class Document
   define_model_callbacks :save #delete me?
 
   #delegate :category, to: :video
-  delegate :index_namespace, to: DocumentRepository
+  #delegate :index_namespace, to: DocumentRepository
 
   attribute :path, String, mapping: { type: 'keyword' }
   validates :path, presence: true
