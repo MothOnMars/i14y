@@ -26,6 +26,7 @@ describe API::V1::Collections do
                                                               reload_connections: true)
 
   end
+  let(:repository) { CollectionRepository.new }
 
   before do
     I14y::Application.config.updates_allowed = allow_updates
@@ -49,7 +50,7 @@ describe API::V1::Collections do
                                                               reload_connections: true)
 
         client.delete_by_query(
-          index: Collection.index_name,
+          index: repository.index_name,
           q: '*:*',
           conflicts: 'proceed'
         )
@@ -66,11 +67,11 @@ describe API::V1::Collections do
       end
 
       it 'uses the collection handle as the Elasticsearch ID' do
-        expect(Collection.find('agency_blogs')).to be_present
+        expect(repository.find('agency_blogs')).to be_present
       end
 
       it 'stores the appropriate fields in the Elasticsearch collection' do
-        collection = Collection.find('agency_blogs')
+        collection = repository.find('agency_blogs')
         expect(collection.token).to eq('secret')
       end
 

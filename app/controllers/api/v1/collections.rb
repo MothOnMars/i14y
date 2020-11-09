@@ -45,11 +45,13 @@ module API
         post do
           check_updates_allowed
           handle = params[:handle]
-          collection = Collection.create(_id: handle, token: params[:token])
+          #collection = Collection.create(_id: handle, token: params[:token])
+          collection = Collection.new(id: handle, token: params[:token])
           error!(collection.errors.messages, 400) unless collection.valid?
+          CollectionRepository.new.save(collection)
           es_documents_index_name = [Document.index_namespace(handle), 'v1'].join('-')
-          Document.create_index!(index: es_documents_index_name)
-          Elasticsearch::Persistence.client.indices.put_alias index: es_documents_index_name,
+          DocumentRepository.new.create_index!(index: es_documents_index_name)
+          DEFAULT_CLIENT.indices.put_alias index: es_documents_index_name,
                                                               name: Document.index_namespace(handle)
           ok("Your collection was successfully created.")
         end
