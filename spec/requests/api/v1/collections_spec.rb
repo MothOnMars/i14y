@@ -163,7 +163,7 @@ describe API::V1::Collections do
       end
 
       it 'deletes the collection' do
-        expect(Collection.exists?('agency_blogs')).to be_falsey
+        expect(repository.exists?('agency_blogs')).to be_falsey
       end
 
       it_behaves_like 'a data modifying request made during read-only mode'
