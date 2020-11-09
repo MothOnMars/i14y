@@ -3,7 +3,7 @@ require 'rails_helper'
 describe Document do
   let(:valid_params) do
     {
-      _id: 'a123',
+      id: 'a123',
       language: 'en',
       path: 'http://www.agency.gov/page1.html',
       title: 'My Title',
@@ -15,45 +15,23 @@ describe Document do
       tags: 'this,that'
     }
   end
-
-  let(:client) do
-    yaml = YAML.load_file("#{Rails.root}/config/elasticsearch.yml").presence
-
-        Elasticsearch::Client.new(log: Rails.env.development?,
-                                                              hosts: yaml['hosts'],
-                                                              user: yaml['user'],
-                                                              password: yaml['password'],
-                                                              randomize_hosts: true,
-                                                              retry_on_failure: true,
-                                                              reload_connections: true)
-
+  let(:repository) do
+    handle = 'test_index'
+    es_documents_index_name = [Document.index_namespace(handle), 'v1'].join('-')
+    DocumentRepository.new(index: es_documents_index_name)
   end
 
   before(:all) do
     handle = 'test_index'
-    client.indices.delete(
-      index: [Document.index_namespace(handle), '*'].join('-')
-    )
     es_documents_index_name = [Document.index_namespace(handle), 'v1'].join('-')
-    Document.create_index!(index: es_documents_index_name)
-    client.indices.put_alias index: es_documents_index_name,
-                                                        name: Document.index_namespace(handle)
-    Document.index_name = Document.index_namespace(handle)
+    DocumentRepository.new.create_index!(index: es_documents_index_name)
+    #DEFAULT_CLIENT.indices.put_alias index: es_documents_index_name, #nix?
+    #                                                    name: Document.index_namespace(handle)
+   # Document.index_name = Document.index_namespace(handle)
   end
 
-  after(:all) do
-    yaml = YAML.load_file("#{Rails.root}/config/elasticsearch.yml").presence
-
-    client = Elasticsearch::Client.new(log: Rails.env.development?,
-                                                              hosts: yaml['hosts'],
-                                                              user: yaml['user'],
-                                                              password: yaml['password'],
-                                                              randomize_hosts: true,
-                                                              retry_on_failure: true,
-                                                              reload_connections: true)
-    client.indices.delete(
-      index: [Document.index_namespace('test_index'), '*'].join('-')
-    )
+  after do
+    repository.delete_index!
   end
 
   describe '.create' do
@@ -66,7 +44,7 @@ describe Document do
       end
 
       before do
-        Document.create(_id: 'a123',
+        repository.save(id: 'a123',
                         language: 'en',
                         title: '<b><a href="http://foo.com/">foo</a></b><img src="bar.jpg">',
                         description: html,
@@ -76,7 +54,7 @@ describe Document do
       end
 
       it 'sanitizes the language fields' do
-        document = Document.find 'a123'
+        document = repository.find 'a123'
         expect(document.title).to eq('foo')
         expect(document.description).to eq('hello & goodbye!')
         expect(document.content).to eq('this is html')
@@ -88,11 +66,11 @@ describe Document do
         valid_params.merge(created: DateTime.now, changed: '')
       end
 
-      before { Document.create(params_without_changed) }
+      before { repository.save(params_without_changed) }
 
       it 'sets "changed" to be the same as "created"' do
-        Document.create(params_without_changed)
-        document = Document.find('a123')
+       # repository.save(params_without_changed) #REDUNDANT?
+        document = repository.find('a123')
         expect(document.changed).to eq document.created
       end
     end

@@ -1,6 +1,8 @@
 require 'active_model' #remove?
 #require 'active_model/callbacks'
 
+#good ref for what used to be included with es persistence model:
+#https://github.com/elastic/elasticsearch-rails/blob/7aa03e87b7fee71007ff7aa1a6fb452de298587e/elasticsearch-persistence/lib/elasticsearch/persistence/model.rb#L38
 class Document
   include ActiveModel::Model
   include ActiveModel::Validations
@@ -32,7 +34,7 @@ class Document
   attribute :tags, String, mapping: { type: 'keyword' }
   attribute :click_count, Integer
 
-  before_save { self.changed = changed.presence || created }
+  #before_save { self.changed = changed.presence || created }
 
   LANGUAGE_FIELDS = [:title, :description, :content]
 
