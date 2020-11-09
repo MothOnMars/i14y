@@ -7,6 +7,7 @@ class DocumentRepository
   klass Document
 
   index_name index_namespace
+ client DEFAULT_CLIENT
 
   settings index: { number_of_shards: 1 }
 

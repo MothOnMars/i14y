@@ -22,6 +22,7 @@ describe DocumentSearch do
     YAML.load_file("#{Rails.root}/config/elasticsearch.yml").presence
   end
   let(:client) do
+    #use default client
     Elasticsearch::Client.new(log: Rails.env.development?,
                                                               hosts: yaml['hosts'],
                                                               user: yaml['user'],

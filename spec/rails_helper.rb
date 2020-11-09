@@ -54,6 +54,6 @@ RSpec.configure do |config|
   end
 
   config.after :each, elasticsearch: true do
-    Elasticsearch::Persistence.client.indices.delete index: '*documents*'
+    DEFAULT_CLIENT.indices.delete index: '*documents*'
   end
 end

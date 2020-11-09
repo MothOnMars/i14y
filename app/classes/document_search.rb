@@ -34,7 +34,7 @@ class DocumentSearch
   def execute_client_search
     params = { index: indices, body: doc_query.body, from: offset, size: size }
     Rails.logger.debug "Query: *****\n#{doc_query.body.to_json}\n*****"
-    result = Elasticsearch::Persistence.client.search(params)
+    result = DEFAULT_CLIENT.search(params) #FIXME: use doc repository.search?
     DocumentSearchResults.new(result, offset)
   end
 end

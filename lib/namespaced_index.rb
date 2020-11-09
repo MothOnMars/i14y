@@ -8,4 +8,6 @@ module NamespacedIndex
     index_namespace.remove(/-v.*$/)
   end
 
+  # https://github.com/elastic/elasticsearch-rails/blob/a0f14d96fab54b64cb3b8cbacd6476aba2dfa78d/elasticsearch-persistence/spec/repository_spec.rb#L158
+ 
 end
