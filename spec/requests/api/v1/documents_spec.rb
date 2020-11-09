@@ -1,7 +1,7 @@
 require 'rails_helper'
 require 'uri'
 
-describe API::V1::Documents, elasticsearch: true  do
+describe API::V1::Documents, elasticsearch: true , skip: 'pending' do
   let(:id) { 'some really!weird@id.name' }
   let(:valid_session) do
     credentials = ActionController::HttpAuthentication::Basic.encode_credentials 'test_index', 'test_key'

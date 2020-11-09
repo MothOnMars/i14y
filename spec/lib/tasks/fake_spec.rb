@@ -3,7 +3,7 @@ require 'rake'
 
 describe 'create fake test documents' do
 
-  describe 'fake:documents' do
+  pending 'fake:documents' do
     let(:task_name) { 'fake:documents' }
 
     before(:all) do

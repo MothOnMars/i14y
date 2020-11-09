@@ -1,6 +1,6 @@
 require 'rails_helper'
 
-describe DocumentSearch do
+describe DocumentSearch, skip: 'pending' do
   let(:query) { "common" }
   let(:handles) { %w(agency_blogs) }
   let(:search_options) do

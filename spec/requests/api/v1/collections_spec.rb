@@ -233,12 +233,18 @@ describe API::V1::Collections do
   end
 
   describe 'GET /api/v1/collections/search' do
+    let(:repository) do
+      #yuck
+      DocumentRepository.new(index_name: Document.index_namespace('agency_blogs'))
+    end
+
     context 'success case' do
       before do
-        Elasticsearch::Persistence.client.delete_by_query index: Collection.index_name, q: '*:*', conflicts: 'proceed'
+        CollectionRepository.new.delete_index!(force: true)
+        repository.delete_index!(force: true)
+        repository.create_index!
         post '/api/v1/collections', params: valid_params, headers: valid_session
-        Document.index_name = Document.index_namespace('agency_blogs')
-        Elasticsearch::Persistence.client.delete_by_query index: Document.index_name, q: '*:*', conflicts: 'proceed'
+        #DEFAULT_CLIENT.delete_by_query index: Document.index_name, q: '*:*', conflicts: 'proceed'
       end
 
       let(:datetime) { DateTime.now.utc.to_s }
@@ -262,9 +268,9 @@ describe API::V1::Collections do
                       updated_at: datetime } }
 
       it 'returns highlighted JSON search results' do
-        Document.create(hash1)
-        Document.create(hash2)
-        Document.refresh_index!
+        repository.save(Document.new(hash1))
+        repository.save(Document.new(hash2))
+        #Document.refresh_index!
         valid_params = { language: 'en', query: 'common contentx', handles: 'agency_blogs' }
         get '/api/v1/collections/search', params: valid_params, headers: valid_session
         expect(response.status).to eq(200)
