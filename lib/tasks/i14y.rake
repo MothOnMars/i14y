@@ -10,10 +10,10 @@ namespace :i14y do
                                                              order: 0,
                                                              create: true)
     end
-    binding.pry
     es_collections_index_name = [Collection.index_namespace, 'v1'].join('-')
-    Collection.create_index!(index: es_collections_index_name)
-    DEFAULT_CLIENT.indices.put_alias index: es_collections_index_name, name: Collection.index_name
+
+    CollectionRepository.new.create_index!(index: es_collections_index_name)
+    DEFAULT_CLIENT.indices.put_alias index: es_collections_index_name, name: CollectionRepository.index_name
   end
 
   desc "Copies data from one version of the i14y index to the next (e.g., collections, documents) and updates the alias"
