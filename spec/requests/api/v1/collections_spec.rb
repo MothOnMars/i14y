@@ -37,7 +37,7 @@ describe API::V1::Collections do
     I14y::Application.config.updates_allowed = true
   end
 
-  describe 'POST /api/v1/collections' do
+  pending 'POST /api/v1/collections' do
     context 'success case' do
       before do
         
@@ -170,7 +170,7 @@ describe API::V1::Collections do
     end
   end
 
-  describe 'GET /api/v1/collections/{handle}' do
+  pending 'GET /api/v1/collections/{handle}' do
     context 'success case' do
       before do
         #FIXME: DRY UP
@@ -229,7 +229,7 @@ describe API::V1::Collections do
     end
   end
 
-  describe 'GET /api/v1/collections/search' do
+  pending 'GET /api/v1/collections/search' do
     let(:repository) do
       #yuck
       DocumentRepository.new(index_name: Document.index_namespace('agency_blogs'))
