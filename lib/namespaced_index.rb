@@ -1,11 +1,12 @@
 module NamespacedIndex
   def index_namespace(handle = nil)
-   # [Rails.env, I14y::APP_NAME, klass.to_s.tableize, handle].compact.join('-')
     # MASTER:  [Rails.env, I14y::APP_NAME, self.name.tableize, handle].compact.join('-')
 
-    [Rails.env, I14y::APP_NAME, self.name.tableize, 'v1'].compact.join('-') #FIXME
+    #[Rails.env, I14y::APP_NAME, self.name.tableize, 'v1'].compact.join('-') #FIXME
+    [Rails.env, I14y::APP_NAME, klass.to_s.tableize, handle].compact.join('-')
   end
 
+  # FIXME - this was not in master
   def alias
     index_namespace.remove(/-v.*$/)
   end

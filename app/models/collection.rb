@@ -5,15 +5,12 @@ class Collection
     include ActiveModel::Model
   include ActiveModel::Validations
   extend ActiveModel::Callbacks
-  extend NamespacedIndex
 include Virtus.model
 
   attribute :id, String, mapping: { type: 'keyword' }
   attribute :token, String, mapping: { type: 'keyword' }
   validates :token, presence: true
   #validate id?
-
-  delegate :index_namespace, to: CollectionRepository
 
 
   def document_total

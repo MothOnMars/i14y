@@ -7,7 +7,7 @@ class Document
   include ActiveModel::Model
   include ActiveModel::Validations
   extend ActiveModel::Callbacks #delete me?
-  extend NamespacedIndex
+ # extend NamespacedIndex
  # include Elasticsearch::Persistence::Model
   include Virtus.model
  # include ActiveModel::Model

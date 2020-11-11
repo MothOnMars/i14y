@@ -7,7 +7,7 @@ class CollectionRepository
   klass Collection
  client DEFAULT_CLIENT
 
- index_name Collection.index_namespace # FIXME
+ #index_name Collection.index_namespace # FIXME
 
   settings index: { number_of_shards: 1 }
 
