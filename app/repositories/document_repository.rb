@@ -12,7 +12,10 @@ class DocumentRepository
   settings index: { number_of_shards: 1 }
 
     def serialize(document)
-      Serde.serialize_hash(document, document[:language], Document::LANGUAGE_FIELDS)
+      # document is a hash
+      puts "before serde: #{document.class}"
+      doc_hash = document.to_hash
+      Serde.serialize_hash(doc_hash, doc_hash[:language], Document::LANGUAGE_FIELDS)
     end
 
     def deserialize(hash)

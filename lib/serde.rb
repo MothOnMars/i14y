@@ -1,5 +1,6 @@
 module Serde
   def self.serialize_hash(hash, language, language_field_keys)
+    puts "in serde: #{hash.class}"
     language_field_keys.each do |key|
       value = hash[key.to_sym]
       if value.present?
