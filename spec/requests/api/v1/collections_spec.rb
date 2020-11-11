@@ -58,7 +58,7 @@ describe API::V1::Collections do
       end
 
       it 'uses the collection handle as the Elasticsearch ID' do
-        expect(repository.find('agency_blogs')).to be_present
+        expect(collection_repository.find('agency_blogs')).to be_present
       end
 
       it 'stores the appropriate fields in the Elasticsearch collection' do
