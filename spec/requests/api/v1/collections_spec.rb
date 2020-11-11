@@ -327,10 +327,11 @@ describe API::V1::Collections do
 
     context 'no results' do
       before do
-        client.delete_by_query index: Collection.index_name, q: '*:*', conflicts: 'proceed'
+        client.delete_by_query index: collection_repository.index_name, q: '*:*', conflicts: 'proceed'
         post '/api/v1/collections', params: valid_params, headers: valid_session
-        Document.index_name = Document.index_namespace('agency_blogs')
-        client.delete_by_query index: Document.index_name, q: '*:*', conflicts: 'proceed'
+       # Document.index_name = Document.index_namespace('agency_blogs')
+        #client.delete_by_query index: Document.index_name, q: '*:*', conflicts: 'proceed'
+        client.delete_by_query index: document_repository.index_name, q: '*:*', conflicts: 'proceed'
       end
 
       it 'returns JSON no hits results' do
