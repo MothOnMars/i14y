@@ -20,9 +20,13 @@ describe API::V1::Collections do
     DEFAULT_CLIENT
 
   end
-  let(:collection_repository) { CollectionRepository.new }
+  let(:collection_repository) do
+    CollectionRepository.new(index_name: [Rails.env, I14y::APP_NAME, 'collections', 'v1'].join('-'))
+  end
+
 
   before do
+    puts collection_repository.index_name
     I14y::Application.config.updates_allowed = allow_updates
     I14y::Application.config.maintenance_message = maintenance_message
     client.delete_by_query(
@@ -133,7 +137,6 @@ describe API::V1::Collections do
   describe 'DELETE /api/v1/collections/{handle}' do
     context 'success case' do
       before do
-        client.delete_by_query index: collection_repository.index_name, q: '*:*', conflicts: 'proceed'
         collection_repository.save(Collection.new(id: 'agency_blogs', token: 'secret'))
         delete '/api/v1/collections/agency_blogs', headers: valid_session
       end
