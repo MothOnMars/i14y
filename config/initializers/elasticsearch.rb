@@ -8,7 +8,7 @@ DEFAULT_CLIENT = Elasticsearch::Client.new(log: Rails.env.development?,
                                                               retry_on_failure: true,
                                                               reload_connections: true)
 
-if Rails.env.development?
+if true # Rails.env.development?
   logger = ActiveSupport::Logger.new(STDERR)
   logger.level = Logger::DEBUG
   logger.formatter = proc { |_s, _d, _p, m| "\e[2m#{m}\n\e[0m" }

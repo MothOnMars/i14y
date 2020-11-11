@@ -14,9 +14,10 @@ module TestServices
 
   def create_es_indexes
     collections_index_name = [Rails.env, I14y::APP_NAME, 'collections', 'v1'].join('-')
-    CollectionRepository.new.create_index!(index: collections_index_name)
+    collection_repository = CollectionRepository.new(index_name: collections_index_name)
+    collection_repository.create_index!
     #FIXME - do we even need the alias?
-    DEFAULT_CLIENT.indices.put_alias index: collections_index_name, name: collections_index_name.remove('v1')
+    DEFAULT_CLIENT.indices.put_alias index: collections_index_name, name: collections_index_name.remove('-v1')
     # alias is just the namespaced index wtihout the v1
     #client.indices.put_alias index: es_collections_index_name, name: Collection.alias 
    # Elasticsearch::Persistence.client.indices.put_alias index: es_collections_index_name, name: Collection.index_name

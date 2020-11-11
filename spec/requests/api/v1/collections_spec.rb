@@ -17,13 +17,7 @@ describe API::V1::Collections do
     YAML.load_file("#{Rails.root}/config/elasticsearch.yml").presence
   end
   let(:client) do
-    Elasticsearch::Client.new(log: Rails.env.development?,
-                                                              hosts: yaml['hosts'],
-                                                              user: yaml['user'],
-                                                              password: yaml['password'],
-                                                              randomize_hosts: true,
-                                                              retry_on_failure: true,
-                                                              reload_connections: true)
+    DEFAULT_CLIENT
 
   end
   let(:collection_repository) { CollectionRepository.new }
@@ -31,6 +25,11 @@ describe API::V1::Collections do
   before do
     I14y::Application.config.updates_allowed = allow_updates
     I14y::Application.config.maintenance_message = maintenance_message
+    client.delete_by_query(
+      index: collection_repository.index_name,
+      q: '*:*',
+      conflicts: 'proceed'
+    )
   end
 
   after do
@@ -40,11 +39,6 @@ describe API::V1::Collections do
   describe 'POST /api/v1/collections' do
     context 'success case' do
       before do
-        client.delete_by_query(
-          index: collection_repository.index_name,
-          q: '*:*',
-          conflicts: 'proceed'
-        )
         post '/api/v1/collections', params: valid_params, headers: valid_session
       end
 
