@@ -49,10 +49,10 @@ module API
           collection = Collection.new(id: handle, token: params[:token])
           error!(collection.errors.messages, 400) unless collection.valid?
           CollectionRepository.new.save(collection)
-          es_documents_index_name = [Document.index_namespace(handle), 'v1'].join('-')
+          es_documents_index_name = [DocumentRepository.index_namespace(handle), 'v1'].join('-')
           DocumentRepository.new.create_index!(index: es_documents_index_name)
           DEFAULT_CLIENT.indices.put_alias index: es_documents_index_name,
-                                                              name: Document.index_namespace(handle)
+                                                              name: DocumentRepository.index_namespace(handle)
           ok("Your collection was successfully created.")
         end
 
@@ -62,7 +62,7 @@ module API
           handle = params.delete(:handle)
           error!(collection.errors.messages, 400) unless CollectionRepository.new.delete(handle)
           #todo: this with a delete_index
-          DEFAULT_CLIENT.indices.delete(index: [Document.index_namespace(handle), '*'].join('-'))
+          DEFAULT_CLIENT.indices.delete(index: [DocumentRepository.index_namespace(handle), '*'].join('-'))
           ok("Your collection was successfully deleted.")
         end
 
