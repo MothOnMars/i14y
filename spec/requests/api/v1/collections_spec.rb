@@ -381,8 +381,10 @@ missing suggestion:
       end
 
       before do
-        client.delete_by_query index: Collection.index_name, q: '*:*', conflicts: 'proceed'
-        Collection.create(_id: 'agency_blogs', token: 'secret')
+        client.delete_by_query index: collection_repository.index_name, q: '*:*', conflicts: 'proceed'
+        collection = Collection.new(id: 'agency_blogs', token: 'secret')
+        collection_repository.save(collection)
+        collection_repository.refresh_index!
         get '/api/v1/collections/search', params: bad_handle_params, headers: valid_session
       end
 
