@@ -26,7 +26,7 @@ describe API::V1::Collections do
                                                               reload_connections: true)
 
   end
-  let(:repository) { CollectionRepository.new }
+  let(:collection_repository) { CollectionRepository.new }
 
   before do
     I14y::Application.config.updates_allowed = allow_updates
@@ -41,7 +41,7 @@ describe API::V1::Collections do
     context 'success case' do
       before do
         client.delete_by_query(
-          index: repository.index_name,
+          index: collection_repository.index_name,
           q: '*:*',
           conflicts: 'proceed'
         )
@@ -62,7 +62,7 @@ describe API::V1::Collections do
       end
 
       it 'stores the appropriate fields in the Elasticsearch collection' do
-        collection = repository.find('agency_blogs')
+        collection = collection_repository.find('agency_blogs')
         expect(collection.token).to eq('secret')
       end
 
@@ -139,8 +139,8 @@ describe API::V1::Collections do
   describe 'DELETE /api/v1/collections/{handle}' do
     context 'success case' do
       before do
-        client.delete_by_query index: repository.index_name, q: '*:*', conflicts: 'proceed'
-        repository.save(Collection.new(id: 'agency_blogs', token: 'secret'))
+        client.delete_by_query index: collection_repository.index_name, q: '*:*', conflicts: 'proceed'
+        collection_repository.save(Collection.new(id: 'agency_blogs', token: 'secret'))
         delete '/api/v1/collections/agency_blogs', headers: valid_session
       end
 
@@ -154,7 +154,7 @@ describe API::V1::Collections do
       end
 
       it 'deletes the collection' do
-        expect(repository.exists?('agency_blogs')).to be_falsey
+        expect(collection_repository.exists?('agency_blogs')).to be_falsey
       end
 
       it_behaves_like 'a data modifying request made during read-only mode'
@@ -165,7 +165,7 @@ describe API::V1::Collections do
     context 'success case' do
       before do
         #FIXME: DRY UP
-        client.delete_by_query index: repository.index_name, q: '*:*', conflicts: 'proceed'
+        client.delete_by_query index: collection_repository.index_name, q: '*:*', conflicts: 'proceed'
         post '/api/v1/collections', params: valid_params, headers: valid_session
         #Document.index_name = DocumentRepository.index_namespace('agency_blogs')
         #client.delete_by_query index: Document.index_name, q: '*:*', conflicts: 'proceed'
@@ -200,8 +200,8 @@ describe API::V1::Collections do
       xit 'returns success message with Collection stats as JSON' do
 #        Document.create(hash1)
 #        Document.create(hash2)
-        repository.save(Document.new(hash1))
-        repository.save(Document.new(hash2))
+        document_repository.save(Document.new(hash1))
+        document_repository.save(Document.new(hash2))
         #Document.refresh_index!
         get '/api/v1/collections/agency_blogs', headers: valid_session
         expect(response.status).to eq(200)
@@ -221,17 +221,16 @@ describe API::V1::Collections do
   end
 
   describe 'GET /api/v1/collections/search' do
-    let(:repository) do
+    let(:document_repository) do
       #yuck
       DocumentRepository.new(index_name: Document.index_namespace('agency_blogs'))
     end
 
     context 'success case' do
       before do
-        CollectionRepository.new.delete_index!(force: true)
         #FIXME: more efficient to delete by query
-        repository.delete_index!(force: true)
-        repository.create_index!
+        collection_repository.delete_index!(force: true)
+        collection_repository.create_index!
         post '/api/v1/collections', params: valid_params, headers: valid_session
         #DEFAULT_CLIENT.delete_by_query index: Document.index_name, q: '*:*', conflicts: 'proceed'
       end
@@ -257,8 +256,8 @@ describe API::V1::Collections do
                       updated_at: datetime } }
 
       it 'returns highlighted JSON search results' do
-        repository.save(Document.new(hash1))
-        repository.save(Document.new(hash2))
+        document_repository.save(Document.new(hash1))
+        document_repository.save(Document.new(hash2))
         #Document.refresh_index!
         valid_params = { language: 'en', query: 'common contentx', handles: 'agency_blogs' }
         get '/api/v1/collections/search', params: valid_params, headers: valid_session
