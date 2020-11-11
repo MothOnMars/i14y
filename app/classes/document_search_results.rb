@@ -3,6 +3,7 @@ class DocumentSearchResults
 
   def initialize(result, offset = 0)
     @total = result['hits']['total']
+    puts "total: #{total}"
     @offset = offset
     @results = extract_hits(result['hits']['hits'])
     @suggestion = extract_suggestion(result['suggest'])

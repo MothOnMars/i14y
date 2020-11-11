@@ -258,7 +258,9 @@ describe API::V1::Collections do
       it 'returns highlighted JSON search results' do
         document_repository.save(Document.new(hash1))
         document_repository.save(Document.new(hash2))
+        document_repository.refresh_index! #TODO: replace w/ doc create
         #Document.refresh_index!
+        #TODO: make 'common contentx' its own spec
         valid_params = { language: 'en', query: 'common contentx', handles: 'agency_blogs' }
         get '/api/v1/collections/search', params: valid_params, headers: valid_session
         expect(response.status).to eq(200)
@@ -268,6 +270,14 @@ describe API::V1::Collections do
                           'suggestion' => { 'text' => 'common content',
                                             'highlighted' => 'common content' }
                         }
+=begin
+missing suggestion:
+           "metadata" => {
+         "total" => 2,
+        "offset" => 0,
+    "suggestion" => nil
+  },
+=end
         result1 = {
                     'language' => 'en',
                     'created' => datetime,

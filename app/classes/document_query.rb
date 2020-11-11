@@ -35,7 +35,7 @@ class DocumentQuery
       search.suggest(:suggestion, suggestion_hash)
     end
     build_search_query
-    search.explain true if Rails.logger.debug? #scoring details
+    search.explain false #true if Rails.logger.debug? #scoring details
     search
   end
 

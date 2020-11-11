@@ -1,5 +1,6 @@
 module DocumentCrud
 
+  #fixme
   def document_create(params)
     Document.create(params)
     Document.refresh_index!
