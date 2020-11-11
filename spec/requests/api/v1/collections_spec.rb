@@ -171,7 +171,7 @@ describe API::V1::Collections do
         #client.delete_by_query index: Document.index_name, q: '*:*', conflicts: 'proceed'
         
         #FIXME: all this namespaced index stuff...
-        client.delete_by_query index: Document.index_namespace('agency_blogs'), q: '*:*', conflicts: 'proceed'
+        client.delete_by_query index: DocumentRepository.index_namespace('agency_blogs'), q: '*:*', conflicts: 'proceed'
       end
 
       let(:datetime) { DateTime.now.utc }
@@ -223,7 +223,7 @@ describe API::V1::Collections do
   describe 'GET /api/v1/collections/search' do
     let(:document_repository) do
       #yuck
-      DocumentRepository.new(index_name: Document.index_namespace('agency_blogs'))
+      DocumentRepository.new(index_name: DocumentRepository.index_namespace('agency_blogs'))
     end
 
     context 'success case' do
@@ -329,7 +329,7 @@ describe API::V1::Collections do
       before do
         client.delete_by_query index: collection_repository.index_name, q: '*:*', conflicts: 'proceed'
         post '/api/v1/collections', params: valid_params, headers: valid_session
-       # Document.index_name = Document.index_namespace('agency_blogs')
+       # Document.index_name = DocumentRepository.index_namespace('agency_blogs')
         #client.delete_by_query index: Document.index_name, q: '*:*', conflicts: 'proceed'
         client.delete_by_query index: document_repository.index_name, q: '*:*', conflicts: 'proceed'
       end
