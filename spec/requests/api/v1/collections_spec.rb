@@ -220,7 +220,7 @@ describe API::V1::Collections do
     end
   end
 
-  pending 'GET /api/v1/collections/search' do
+  describe 'GET /api/v1/collections/search' do
     let(:repository) do
       #yuck
       DocumentRepository.new(index_name: Document.index_namespace('agency_blogs'))
