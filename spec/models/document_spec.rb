@@ -17,13 +17,13 @@ describe Document do
   end
   let(:repository) do
     handle = 'test_index'
-    es_documents_index_name = [Document.index_namespace(handle), 'v1'].join('-')
+    es_documents_index_name = [DocumentRepository.index_namespace(handle), 'v1'].join('-')
     DocumentRepository.new(index: es_documents_index_name)
   end
 
   before(:all) do
     handle = 'test_index'
-    es_documents_index_name = [Document.index_namespace(handle), 'v1'].join('-')
+    es_documents_index_name = [DocumentRepository.index_namespace(handle), 'v1'].join('-')
     DocumentRepository.new.create_index!(index: es_documents_index_name)
     #DEFAULT_CLIENT.indices.put_alias index: es_documents_index_name, #nix?
     #                                                    name: Document.index_namespace(handle)
