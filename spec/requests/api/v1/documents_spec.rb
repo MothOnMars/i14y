@@ -71,7 +71,7 @@ describe API::V1::Documents, elasticsearch: true do
       it_behaves_like 'a data modifying request made during read-only mode'
     end
 
-    context 'trying to create an existing document' do
+    pending 'trying to create an existing document' do
       before do
         document_create(valid_params.merge(_id: 'its_a_dupe'))
 
@@ -95,7 +95,7 @@ describe API::V1::Documents, elasticsearch: true do
       end
     end
 
-    context 'invalid language param' do
+    pending 'invalid language param' do
       before do
         valid_params = { document_id:  'a1234',
                          title:        'my title',
@@ -115,7 +115,7 @@ describe API::V1::Documents, elasticsearch: true do
       end
     end
 
-    context 'slash in id' do
+    pending 'slash in id' do
       before { api_post valid_params.merge(document_id: 'a1/234'), valid_session }
 
       it 'returns failure message as JSON' do
@@ -126,7 +126,7 @@ describe API::V1::Documents, elasticsearch: true do
       end
     end
 
-    context 'id larger than 512 bytes' do
+    pending 'id larger than 512 bytes' do
       before do
         two_byte_character = '\u00b5'
         string_with_513_bytes_but_only_257_characters = 'x' + two_byte_character * 256
@@ -148,7 +148,7 @@ describe API::V1::Documents, elasticsearch: true do
       end
     end
 
-    context 'missing language param' do
+    pending 'missing language param' do
       before do
         valid_params = { document_id: 'a1234',
                          title:       'my title',
@@ -163,7 +163,7 @@ describe API::V1::Documents, elasticsearch: true do
       end
     end
 
-    context 'a required parameter is empty/blank' do
+    pending 'a required parameter is empty/blank' do
       before do
         invalid_params = valid_params.merge({ 'title' => ' ' })
         api_post invalid_params, valid_session
@@ -177,7 +177,7 @@ describe API::V1::Documents, elasticsearch: true do
       end
     end
 
-    context 'path URL is poorly formatted' do
+    pending 'path URL is poorly formatted' do
       before do
         invalid_params = { document_id: 'a1234',
                            title:       'weird URL with blank',
@@ -195,7 +195,7 @@ describe API::V1::Documents, elasticsearch: true do
       end
     end
 
-    context 'failed authentication/authorization' do
+    pending 'failed authentication/authorization' do
       before do
         valid_params = { document_id: 'a1234',
                          title:       'my title',
@@ -217,7 +217,7 @@ describe API::V1::Documents, elasticsearch: true do
       end
     end
 
-    context 'something terrible happens during authentication' do
+    pending 'something terrible happens during authentication' do
       before do
         allow(Collection).to receive(:find).and_raise(Elasticsearch::Transport::Transport::Errors::BadRequest)
         valid_params = { document_id: 'a1234',
@@ -237,7 +237,7 @@ describe API::V1::Documents, elasticsearch: true do
       end
     end
 
-    context 'something terrible happens creating the document' do
+    pending 'something terrible happens creating the document' do
       before do
         allow(Document).to receive(:new) { raise_error(Exception) }
         valid_params = { document_id: 'a1234',
