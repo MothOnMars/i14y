@@ -23,13 +23,14 @@ describe API::V1::Collections do
   let(:collection_repository) do
     CollectionRepository.new(index_name: [Rails.env, I14y::APP_NAME, 'collections', 'v1'].join('-'))
   end
-
+  let(:document_repository) do
+    #yuck
+    DocumentRepository.new(index_name: DocumentRepository.index_namespace('agency_blogs'))
+  end
 
   before do
-    puts collection_repository.index_name
     I14y::Application.config.updates_allowed = allow_updates
     I14y::Application.config.maintenance_message = maintenance_message
-    puts 'deleting by query'
     client.delete_by_query(
       index: collection_repository.index_name,
       q: '*:*',
@@ -162,16 +163,26 @@ describe API::V1::Collections do
   end
 
   describe 'GET /api/v1/collections/{handle}' do
+    subject(:get_collection) do
+      get '/api/v1/collections/agency_blogs', headers: valid_session
+    end
+
     context 'success case' do
       before do
         #FIXME: DRY UP
-        client.delete_by_query index: collection_repository.index_name, q: '*:*', conflicts: 'proceed'
+        puts 'posting collection'
+        #FIXME -don't do this via the api
         post '/api/v1/collections', params: valid_params, headers: valid_session
         #Document.index_name = DocumentRepository.index_namespace('agency_blogs')
         #client.delete_by_query index: Document.index_name, q: '*:*', conflicts: 'proceed'
         
         #FIXME: all this namespaced index stuff...
         client.delete_by_query index: DocumentRepository.index_namespace('agency_blogs'), q: '*:*', conflicts: 'proceed'
+#        Document.create(hash1)
+#        Document.create(hash2)
+        document_repository.save(Document.new(hash1))
+        document_repository.save(Document.new(hash2))
+        get_collection
       end
 
       let(:datetime) { DateTime.now.utc }
@@ -196,15 +207,12 @@ describe API::V1::Collections do
         }
       end
 
-      #TODO
-      xit 'returns success message with Collection stats as JSON' do
-#        Document.create(hash1)
-#        Document.create(hash2)
-        document_repository.save(Document.new(hash1))
-        document_repository.save(Document.new(hash2))
-        #Document.refresh_index!
-        get '/api/v1/collections/agency_blogs', headers: valid_session
+      it 'is successful' do
         expect(response.status).to eq(200)
+      end
+      #TODO
+      it 'returns success message with Collection stats as JSON' do
+        #Document.refresh_index!
         expect(JSON.parse(response.body)).to match(
           hash_including('status' => 200,
                          'developer_message' => 'OK',
@@ -221,10 +229,6 @@ describe API::V1::Collections do
   end
 
   describe 'GET /api/v1/collections/search' do
-    let(:document_repository) do
-      #yuck
-      DocumentRepository.new(index_name: DocumentRepository.index_namespace('agency_blogs'))
-    end
 
     context 'success case' do
       before do
@@ -252,6 +256,7 @@ describe API::V1::Collections do
                       promote: false, tags: 'tag1, tag2',
                       updated_at: datetime } }
 
+      #FIXME - intermittent failure
       it 'returns highlighted JSON search results' do
         document_repository.save(Document.new(hash1))
         document_repository.save(Document.new(hash2))
