@@ -162,7 +162,7 @@ describe API::V1::Collections do
     end
   end
 
-  describe 'GET /api/v1/collections/{handle}' do
+  pending 'GET /api/v1/collections/{handle}' do
     subject(:get_collection) do
       get '/api/v1/collections/agency_blogs', headers: valid_session
     end
@@ -210,9 +210,8 @@ describe API::V1::Collections do
       it 'is successful' do
         expect(response.status).to eq(200)
       end
-      #TODO
+
       it 'returns success message with Collection stats as JSON' do
-        #Document.refresh_index!
         expect(JSON.parse(response.body)).to match(
           hash_including('status' => 200,
                          'developer_message' => 'OK',

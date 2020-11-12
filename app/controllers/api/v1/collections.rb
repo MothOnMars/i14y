@@ -137,6 +137,7 @@ module API
         get ':handle' do
           handle = params.delete(:handle)
           collection = CollectionRepository.new(index_name: CollectionRepository.index_namespace).find(handle)
+          puts collection
           { status: 200, developer_message: "OK" }.merge(collection.as_json(root: true, methods: [:document_total, :last_document_sent]))
         end
       end

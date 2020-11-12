@@ -1,6 +1,5 @@
 module Serde
   def self.serialize_hash(hash, language, language_field_keys)
-    puts "in serde: #{hash.class}"
     language_field_keys.each do |key|
       value = hash[key.to_sym]
       if value.present?
@@ -14,7 +13,6 @@ module Serde
     hash[:changed] = hash[:changed].presence || hash[:created]
     #will this explode if save is called twice?
     hash[:tags] = hash[:tags].extract_array if hash[:tags].present?
-    puts hash
     hash
   end
 
