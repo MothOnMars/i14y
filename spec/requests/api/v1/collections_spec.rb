@@ -29,6 +29,7 @@ describe API::V1::Collections do
     puts collection_repository.index_name
     I14y::Application.config.updates_allowed = allow_updates
     I14y::Application.config.maintenance_message = maintenance_message
+    puts 'deleting by query'
     client.delete_by_query(
       index: collection_repository.index_name,
       q: '*:*',
@@ -43,7 +44,9 @@ describe API::V1::Collections do
   describe 'POST /api/v1/collections' do
     context 'success case' do
       before do
+        puts 'posting'
         post '/api/v1/collections', params: valid_params, headers: valid_session
+        collection_repository.refresh_index!
       end
 
       it 'returns success message as JSON' do
@@ -225,9 +228,6 @@ describe API::V1::Collections do
 
     context 'success case' do
       before do
-        #FIXME: more efficient to delete by query
-        collection_repository.delete_index!(force: true)
-        collection_repository.create_index!
         post '/api/v1/collections', params: valid_params, headers: valid_session
         #DEFAULT_CLIENT.delete_by_query index: Document.index_name, q: '*:*', conflicts: 'proceed'
       end

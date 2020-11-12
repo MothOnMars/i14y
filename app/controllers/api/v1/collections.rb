@@ -48,7 +48,8 @@ module API
           #collection = Collection.create(_id: handle, token: params[:token])
           collection = Collection.new(id: handle, token: params[:token])
           error!(collection.errors.messages, 400) unless collection.valid?
-          CollectionRepository.new.save(collection)
+          #FIXME
+          CollectionRepository.new(index_name: CollectionRepository.index_namespace).save(collection)
           es_documents_index_name = [DocumentRepository.index_namespace(handle), 'v1'].join('-')
           DocumentRepository.new.create_index!(index: es_documents_index_name)
           DEFAULT_CLIENT.indices.put_alias index: es_documents_index_name,
@@ -121,10 +122,12 @@ module API
         end
         get :search do
           handles = params.delete(:handles).split(',')
-          valid_collections = CollectionRepository.new.find(handles).compact
+          #valid_collections = CollectionRepository.new.find(handles).compact
+          valid_collections = CollectionRepository.new(index_name: CollectionRepository.index_namespace).find(handles)
           error!("Could not find all the specified collection handles", 400) unless valid_collections.size == handles.size
           %i(tags ignore_tags include).each { |key| params[key] = params[key].extract_array if params[key].present? }
           document_search = DocumentSearch.new(params.merge(handles: valid_collections.collect(&:id)))
+
           document_search_results = document_search.search
           metadata_hash = { total: document_search_results.total, offset: document_search_results.offset, suggestion: document_search_results.suggestion }
           { status: 200, developer_message: "OK", metadata: metadata_hash, results: document_search_results.results }
