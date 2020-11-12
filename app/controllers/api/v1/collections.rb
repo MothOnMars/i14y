@@ -123,7 +123,7 @@ module API
         get :search do
           handles = params.delete(:handles).split(',')
           #valid_collections = CollectionRepository.new.find(handles).compact
-          valid_collections = CollectionRepository.new(index_name: CollectionRepository.index_namespace).find(handles)
+          valid_collections = CollectionRepository.new(index_name: CollectionRepository.index_namespace).find(handles).compact
           error!("Could not find all the specified collection handles", 400) unless valid_collections.size == handles.size
           %i(tags ignore_tags include).each { |key| params[key] = params[key].extract_array if params[key].present? }
           document_search = DocumentSearch.new(params.merge(handles: valid_collections.collect(&:id)))
