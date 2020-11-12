@@ -9,6 +9,7 @@ describe API::V1::Documents, elasticsearch: true do
   end
   let(:allow_updates) { true }
   let(:maintenance_message) { nil }
+  let(:document_repository) { DocumentRepository.new(index: DocumentRepository.index_namespace('test_index')) }
 
   before(:all) do
     yaml = YAML.load_file("#{Rails.root}/config/secrets.yml")
@@ -30,6 +31,9 @@ describe API::V1::Documents, elasticsearch: true do
   end
 
   describe 'POST /api/v1/documents' do
+    subject(:post_document) do
+      post "/api/v1/documents", params: valid_params, headers: valid_session
+    end
     let(:valid_params) do
       { document_id: id,
         title:       'my title',
@@ -43,7 +47,7 @@ describe API::V1::Documents, elasticsearch: true do
 
     context 'success case' do
       before do
-        api_post valid_params, valid_session
+        post_document
       end
 
       it 'returns success message as JSON' do

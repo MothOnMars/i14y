@@ -26,8 +26,9 @@ module API
           { status: 200, developer_message: "OK", user_message: user_message }
         end
 
-        def auth?(collection_handle, token)
-          Collection.find(collection_handle).token == token
+        def auth?(handle, token)
+         # Collection.find(collection_handle).token == token
+          CollectionRepository.new(index_name: CollectionRepository.index_namespace).find(handle).token == token
         rescue Elasticsearch::Persistence::Repository::DocumentNotFound, Elasticsearch::Transport::Transport::Errors::BadRequest
           false
         end
@@ -89,11 +90,13 @@ module API
         end
 
         post do
-          Document.index_name = Document.index_namespace(@collection_handle)
+          document_repository = DocumentRepository.new(index: DocumentRepository.index_namespace(@collection_handle))
+#          Document.index_name = Document.index_namespace(@collection_handle)
           id = params.delete(:document_id)
-          document = Document.new(params.merge(_id: id))
+          document = Document.new(params)
           error!(document.errors.messages, 400) unless document.valid?
-          document.save(op_type: :create)
+          #document.save(op_type: :create)
+          document_repository.save(document)
           ok("Your document was successfully created.")
         end
 
