@@ -9,7 +9,7 @@ describe API::V1::Documents, elasticsearch: true do
   end
   let(:allow_updates) { true }
   let(:maintenance_message) { nil }
-  let(:document_repository) { DocumentRepository.new(index: DocumentRepository.index_namespace('test_index')) }
+  let(:document_repository) { DocumentRepository.new(index_name: DocumentRepository.index_namespace('test_index')) }
 
   before(:all) do
     yaml = YAML.load_file("#{Rails.root}/config/secrets.yml")
@@ -17,6 +17,7 @@ describe API::V1::Documents, elasticsearch: true do
     credentials = ActionController::HttpAuthentication::Basic.encode_credentials env_secrets['admin_user'], env_secrets['admin_password']
     valid_collection_session = { HTTP_AUTHORIZATION: credentials }
     valid_collection_params = { handle: 'test_index', token: 'test_key' }
+    #FIXME: don't do this with a post
     post '/api/v1/collections', params: valid_collection_params, headers: valid_collection_session
     #Document.index_name = DocumentRepository.index_namespace('test_index')
   end
@@ -32,6 +33,7 @@ describe API::V1::Documents, elasticsearch: true do
 
   describe 'POST /api/v1/documents' do
     subject(:post_document) do
+      binding.pry
       post "/api/v1/documents", params: valid_params, headers: valid_session
     end
     let(:valid_params) do
@@ -59,7 +61,7 @@ describe API::V1::Documents, elasticsearch: true do
       end
 
       it 'uses the collection handle and the document_id in the Elasticsearch ID' do
-        expect(Document.find(id)).to be_present
+        expect(document_repository.find(id)).to be_present
       end
 
       it 'stores the appropriate fields in the Elasticsearch document' do
