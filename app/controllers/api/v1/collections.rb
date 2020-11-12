@@ -61,7 +61,7 @@ module API
         delete ':handle' do
           check_updates_allowed
           handle = params.delete(:handle)
-          error!(collection.errors.messages, 400) unless CollectionRepository.new.delete(handle)
+          error!(collection.errors.messages, 400) unless CollectionRepository.new(index_name: CollectionRepository.index_namespace).delete(handle)
           #todo: this with a delete_index
           DEFAULT_CLIENT.indices.delete(index: [DocumentRepository.index_namespace(handle), '*'].join('-'))
           ok("Your collection was successfully deleted.")
