@@ -3,6 +3,17 @@ require 'uri'
 
 describe API::V1::Documents, elasticsearch: true do
   let(:id) { 'some really!weird@id.name' }
+  let(:language) { 'hy' }
+  let(:doc_params) do
+    { document_id: id,
+      title:       'my title',
+      path:        'http://www.gov.gov/goo.html',
+      description: 'my desc',
+      promote:     true,
+      language:    language,
+      content:     'my content',
+      tags:        'Foo, Bar blat' }
+  end
   let(:valid_session) do
     credentials = ActionController::HttpAuthentication::Basic.encode_credentials 'test_index', 'test_key'
     { HTTP_AUTHORIZATION: credentials }
@@ -33,17 +44,7 @@ describe API::V1::Documents, elasticsearch: true do
 
   describe 'POST /api/v1/documents' do
     subject(:post_document) do
-      post "/api/v1/documents", params: valid_params, headers: valid_session
-    end
-    let(:valid_params) do
-      { document_id: id,
-        title:       'my title',
-        path:        'http://www.gov.gov/goo.html',
-        description: 'my desc',
-        promote:     true,
-        language:    'hy',
-        content:     'my content',
-        tags:        'Foo, Bar blat' }
+      post "/api/v1/documents", params: doc_params, headers: valid_session
     end
 
     context 'success case' do
@@ -79,9 +80,9 @@ describe API::V1::Documents, elasticsearch: true do
     describe 'trying to create an existing document' do
       before do
         #FIXME - need better helper method
-        document_create(valid_params.merge(id: 'its_a_dupe'))
+        document_create(doc_params.merge(id: 'its_a_dupe'))
 
-        api_post valid_params.merge(document_id: 'its_a_dupe'), valid_session
+        api_post doc_params.merge(document_id: 'its_a_dupe'), valid_session
       end
 
       it 'returns failure message as JSON' do
@@ -92,16 +93,12 @@ describe API::V1::Documents, elasticsearch: true do
       end
     end
 
-    pending 'invalid language param' do
+    describe 'invalid language param' do
+      let(:language) { 'qq' }
+
+      #CLEAN THIS UP
       before do
-        valid_params = { document_id:  'a1234',
-                         title:        'my title',
-                         path:         'http://www.gov.gov/goo.html',
-                         created:      '2013-02-27T10:00:00Z',
-                         description:  'my desc',
-                         promote:      true,
-                         language:     'qq' }
-        api_post valid_params, valid_session
+        post_document
       end
 
       it 'returns failure message as JSON' do
@@ -113,7 +110,7 @@ describe API::V1::Documents, elasticsearch: true do
     end
 
     pending 'slash in id' do
-      before { api_post valid_params.merge(document_id: 'a1/234'), valid_session }
+      before { api_post doc_params.merge(document_id: 'a1/234'), valid_session }
 
       it 'returns failure message as JSON' do
         expect(response.status).to eq(400)
@@ -127,14 +124,14 @@ describe API::V1::Documents, elasticsearch: true do
       before do
         two_byte_character = '\u00b5'
         string_with_513_bytes_but_only_257_characters = 'x' + two_byte_character * 256
-        valid_params = { document_id: string_with_513_bytes_but_only_257_characters,
+        doc_params = { document_id: string_with_513_bytes_but_only_257_characters,
                          title:       'my title',
                          path:        'http://www.gov.gov/goo.html',
                          created:     '2013-02-27T10:00:00Z',
                          description: 'my desc',
                          promote:     true,
                          language:    'en' }
-        api_post valid_params, valid_session
+        api_post doc_params, valid_session
       end
 
       it 'returns failure message as JSON' do
@@ -147,12 +144,12 @@ describe API::V1::Documents, elasticsearch: true do
 
     pending 'missing language param' do
       before do
-        valid_params = { document_id: 'a1234',
+        doc_params = { document_id: 'a1234',
                          title:       'my title',
                          path:        'http://www.gov.gov/goo.html',
                          created:     '2013-02-27T10:00:00Z',
                          description: 'my desc' }
-        api_post valid_params, valid_session
+        api_post doc_params, valid_session
       end
 
       it 'uses English (en) as default' do
@@ -162,8 +159,8 @@ describe API::V1::Documents, elasticsearch: true do
 
     pending 'a required parameter is empty/blank' do
       before do
-        invalid_params = valid_params.merge({ 'title' => ' ' })
-        api_post invalid_params, valid_session
+        indoc_params = doc_params.merge({ 'title' => ' ' })
+        api_post indoc_params, valid_session
       end
 
       it 'returns failure message as JSON' do
@@ -176,12 +173,12 @@ describe API::V1::Documents, elasticsearch: true do
 
     pending 'path URL is poorly formatted' do
       before do
-        invalid_params = { document_id: 'a1234',
+        indoc_params = { document_id: 'a1234',
                            title:       'weird URL with blank',
                            description: 'some description',
                            path:        'http://www.gov.gov/ goo.html',
                            created:     '2013-02-27T10:00:00Z' }
-        api_post invalid_params, valid_session
+        api_post indoc_params, valid_session
       end
 
       it 'returns failure message as JSON' do
@@ -194,7 +191,7 @@ describe API::V1::Documents, elasticsearch: true do
 
     pending 'failed authentication/authorization' do
       before do
-        valid_params = { document_id: 'a1234',
+        doc_params = { document_id: 'a1234',
                          title:       'my title',
                          path:        'http://www.gov.gov/goo.html',
                          created:     '2013-02-27T10:00:00Z',
@@ -203,7 +200,7 @@ describe API::V1::Documents, elasticsearch: true do
         bad_credentials = ActionController::HttpAuthentication::Basic.encode_credentials 'nope', 'wrong'
 
         valid_session = { HTTP_AUTHORIZATION:  bad_credentials }
-        api_post valid_params, valid_session
+        api_post doc_params, valid_session
       end
 
       it 'returns error message as JSON' do
@@ -217,13 +214,13 @@ describe API::V1::Documents, elasticsearch: true do
     pending 'something terrible happens during authentication' do
       before do
         allow(Collection).to receive(:find).and_raise(Elasticsearch::Transport::Transport::Errors::BadRequest)
-        valid_params = { document_id: 'a1234',
+        doc_params = { document_id: 'a1234',
                          title:       'my title',
                          path:        'http://www.gov.gov/goo.html',
                          created:     '2013-02-27T10:00:00Z',
                          description: 'my desc',
                          promote:    true }
-        api_post valid_params, valid_session
+        api_post doc_params, valid_session
       end
 
       it 'returns error message as JSON' do
@@ -237,13 +234,13 @@ describe API::V1::Documents, elasticsearch: true do
     pending 'something terrible happens creating the document' do
       before do
         allow(Document).to receive(:new) { raise_error(Exception) }
-        valid_params = { document_id: 'a1234',
+        doc_params = { document_id: 'a1234',
                          title:       'my title',
                          path:        'http://www.gov.gov/goo.html',
                          created:     '2013-02-27T10:00:00Z',
                          description: 'my desc',
                          promote:     true }
-        api_post valid_params, valid_session
+        api_post doc_params, valid_session
       end
 
       it 'returns failure message as JSON' do

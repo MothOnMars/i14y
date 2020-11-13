@@ -43,8 +43,10 @@ RSpec.configure do |config|
 
   config.before :each, elasticsearch: true do
     begin
+      # FIXME
       Document.create_index!
       Document.refresh_index!
+      #FIXME - this causes random logging 
     rescue => Elasticsearch::Transport::Transport::Errors::NotFound
       # This kills "Index does not exist" errors being written to console
       # by this: https://github.com/elastic/elasticsearch-rails/blob/738c63efacc167b6e8faae3b01a1a0135cfc8bbb/elasticsearch-model/lib/elasticsearch/model/indexing.rb#L268
