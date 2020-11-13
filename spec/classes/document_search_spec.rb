@@ -172,7 +172,6 @@ describe DocumentSearch do
                                                           name: DocumentRepository.index_namespace('other_agency_blogs')
     #  Document.index_name = DocumentRepository.index_namespace('other_agency_blogs')
       document_create(language: 'en', title: 'other title 1 common content', description: 'other description 1 common content', created: DateTime.now, path: 'http://www.otheragency.gov/page1.html')
-      Document.refresh_index!
     end
 
     it 'returns results from all indexes' do
@@ -186,7 +185,6 @@ describe DocumentSearch do
     context 'matches on all query terms in URL basename' do
       before do
         document_create(language: 'en', title: 'The president drops by Housing and Urban Development', description: 'Here he is', created: DateTime.now, path: 'http://www.agency.gov/archives/obama-visits-hud.html')
-        Document.refresh_index!
       end
 
       it "matches" do
@@ -204,7 +202,6 @@ describe DocumentSearch do
           document_create(language: 'en', title: 'high occurrence tokens', description: 'these are like stopwords', created: DateTime.now, path: 'http://www.agency.gov/page1.html')
           document_create(language: 'en', title: 'showing up everywhere', description: 'these are like stopwords', created: DateTime.now, path: 'http://www.agency.gov/page1.html')
         end
-        Document.refresh_index!
       end
 
       it "matches 3 out of 4 low freq or missing terms" do
@@ -229,7 +226,6 @@ describe DocumentSearch do
       before do
         document_create(common_params.merge(title: 'jefferson township Petitions and Memorials'))
         document_create(common_params.merge(title: 'jefferson Memorial and township Petitions'))
-        Document.refresh_index!
       end
 
       it 'ranks those higher' do
@@ -245,7 +241,6 @@ describe DocumentSearch do
          document_create(common_params.merge( title: 'other', description: 'other', content: 'Rutabagas'))
          document_create(common_params.merge( title: 'other', description: 'Rutabagas', content: 'other'))
          document_create(common_params.merge( title: 'Rutabagas', description: 'other', content: 'other'))
-         Document.refresh_index!
       end
 
       it 'prioritizes matches in the title, then description, then content' do
@@ -263,7 +258,6 @@ describe DocumentSearch do
           document_create(common_params.merge( path: 'http://www.agency.gov/dir1/page1.html'))
           document_create(common_params.merge( path: 'http://www.agency.gov/dir1/page1'))
           document_create(common_params.merge( path: 'http://www.agency.gov/dir1/page1.txt'))
-          Document.refresh_index!
         end
 
         it "docs ending in .#{ext} appear after non-demoted docs" do
@@ -279,7 +273,6 @@ describe DocumentSearch do
                           description: %q(Some people, when confronted with an information retrieval problem, think "I know, I'll use a stemmer." Now they have two problems.) }
         document_create(common_params.merge(description: 'jefferson township Memorial new'))
         document_create(common_params.merge(description: 'jefferson township memorials news'))
-        Document.refresh_index!
       end
 
       it 'ranks those higher' do
@@ -300,7 +293,6 @@ describe DocumentSearch do
         document_create(common_params)
         document_create(common_params.merge(tags: 'stats'))
         document_create(common_params.merge(tags: 'unimportant stats'))
-        Document.refresh_index!
       end
 
       it 'ranks those higher' do
@@ -316,7 +308,6 @@ describe DocumentSearch do
                                             click_count: 10))
         document_create(common_params.merge(path: 'http://agency.gov/more_popular',
                                             click_count: 5))
-        Document.refresh_index!
       end
 
       it 'ranks documents with higher click counts higher' do
@@ -343,7 +334,6 @@ describe DocumentSearch do
                                           path: 'http://www.agency.gov/1minute.html'))
       document_create(common_params.merge(changed: 3.years.ago,
                                           path: 'http://www.agency.gov/3years.html'))
-      Document.refresh_index!
     end
 
     context 'by default' do
@@ -389,7 +379,6 @@ describe DocumentSearch do
     before do
       document_create(language: 'en', title: 'america title 1', description: 'description 1', created: DateTime.now, path: 'http://www.agency.gov/page1.html')
       document_create(language: 'fr', title: 'america title 1', description: 'description 1', created: DateTime.now, path: 'http://fr.www.agency.gov/page1.html')
-      Document.refresh_index!
     end
 
     it 'returns results from only that language' do
@@ -409,7 +398,6 @@ describe DocumentSearch do
       document_create(common_params.merge(tags: 'york, usa'))
       document_create(common_params.merge(tags: 'new york, usa'))
       document_create(common_params.merge(tags: 'random tag'))
-      Document.refresh_index!
     end
 
     context 'inclusive filtering' do
@@ -478,7 +466,6 @@ describe DocumentSearch do
                                           path: 'http://www.agency.gov/dir1/page3.html'))
       document_create(common_params.merge(changed: nil,
                                           path: 'http://www.agency.gov/dir1/page4.html'))
-      Document.refresh_index!
     end
 
     it 'returns results from only that date range' do
@@ -494,7 +481,6 @@ describe DocumentSearch do
       document_create(language: 'en', title: 'america title 1', description: 'description 1', created: DateTime.now, path: 'http://www.agency.gov/dir1/dir2/page1.html')
       document_create(language: 'en', title: 'america title 1', description: 'description 1', created: DateTime.now, path: 'http://www.other.gov/dir2/dir3/page1.html')
       document_create(language: 'en', title: 'america title 1', description: 'description 1', created: DateTime.now, path: 'http://agency.gov/page1.html')
-      Document.refresh_index!
     end
 
     let(:base_search_params) do
@@ -590,7 +576,6 @@ describe DocumentSearch do
     before do
       document_create(language: 'en', title: '99 problems', description: 'but speling aint one of the 99 problems', created: DateTime.now, path: 'http://en.agency.gov/page1.html', content: "Will I have to pay more if I have employees with health problems")
       document_create(language: 'es', title: '99 problemas', description: 'pero la ortografía no es uno dello las 99 problemas', created: DateTime.now, path: 'http://es.agency.gov/page1.html', content: '¿Tendré que pagar más si tengo empleados con problemas de la salud?')
-      Document.refresh_index!
     end
 
     it 'should return results for the close spelling for English' do
