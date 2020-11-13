@@ -161,7 +161,7 @@ describe API::V1::Documents, elasticsearch: true do
       end
     end
 
-    pending 'a required parameter is empty/blank' do
+    context 'a required parameter is empty/blank' do
       before do
         indoc_params = doc_params.merge({ 'title' => ' ' })
         api_post indoc_params, valid_session
