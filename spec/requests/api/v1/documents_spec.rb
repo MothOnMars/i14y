@@ -64,8 +64,7 @@ describe API::V1::Documents, elasticsearch: true do
       end
 
       it 'stores the appropriate fields in the Elasticsearch document' do
-        binding.pry
-        document = Document.find(id)
+        document = document_repository.find(id)
         expect(document.path).to eq('http://www.gov.gov/goo.html')
         expect(document.promote).to be_truthy
         expect(document.title).to eq('my title')
