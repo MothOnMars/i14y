@@ -76,20 +76,12 @@ describe API::V1::Documents, elasticsearch: true do
       it_behaves_like 'a data modifying request made during read-only mode'
     end
 
-    pending 'trying to create an existing document' do
+    describe 'trying to create an existing document' do
       before do
-        document_create(valid_params.merge(_id: 'its_a_dupe'))
+        #FIXME - need better helper method
+        document_create(valid_params.merge(id: 'its_a_dupe'))
 
-        dupe_params = { document_id: 'its_a_dupe',
-                        title:       'my title',
-                        path:        'http://www.gov.gov/goo.html',
-                        created:     '2013-02-27T10:00:00Z',
-                        description: 'my desc',
-                        promote:     true,
-                        language:    'hy',
-                        content:     'my content',
-                        tags:        'Foo, Bar blat' }
-        api_post dupe_params, valid_session
+        api_post valid_params.merge(id: 'its_a_dupe'), valid_session
       end
 
       it 'returns failure message as JSON' do
@@ -280,15 +272,15 @@ describe API::V1::Documents, elasticsearch: true do
 
     context 'success case' do
       before do
-        document_create(_id:           id,
-                         language:    'en',
-                         title:       'hi there 4',
-                         description: 'bigger desc 4',
-                         content:     'huge content 4',
-                         created:     2.hours.ago,
-                         updated:     Time.now,
-                         promote:     true,
-                         path:        'http://www.gov.gov/url4.html')
+        document_create(id:           id,
+                        language:    'en',
+                        title:       'hi there 4',
+                        description: 'bigger desc 4',
+                        content:     'huge content 4',
+                        created:     2.hours.ago,
+                        updated:     Time.now,
+                        promote:     true,
+                        path:        'http://www.gov.gov/url4.html')
 
         api_put "/api/v1/documents/#{URI.encode(id)}", update_params, valid_session
       end
@@ -320,15 +312,15 @@ describe API::V1::Documents, elasticsearch: true do
   pending 'DELETE /api/v1/documents/{document_id}' do
     context 'success case' do
       before do
-        document_create(_id:          id,
-                         language:    'en',
-                         title:       'hi there 4',
-                         description: 'bigger desc 4',
-                         content:     'huge content 4',
-                         created:     2.hours.ago,
-                         updated:     Time.now,
-                         promote:     true,
-                         path:        'http://www.gov.gov/url4.html')
+        document_create(id:          id,
+                        language:    'en',
+                        title:       'hi there 4',
+                        description: 'bigger desc 4',
+                        content:     'huge content 4',
+                        created:     2.hours.ago,
+                        updated:     Time.now,
+                        promote:     true,
+                        path:        'http://www.gov.gov/url4.html')
 
         api_delete "/api/v1/documents/#{URI.encode(id)}", valid_session
       end

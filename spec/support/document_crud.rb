@@ -2,18 +2,20 @@ module DocumentCrud
 
   #fixme
   def document_create(params)
-    Document.create(params)
-    Document.refresh_index!
+    #FIXME - need better helper
+    document = Document.new(params)
+    document_repository.save(document)
+    document_repository.refresh_index!
   end
 
   def api_post(params,session)
     post "/api/v1/documents", params: params, headers: session
-    Document.refresh_index!
+    document_repository.refresh_index!
   end
 
   def api_put(path,params, session)
     put path, params: params, headers: session
-    Document.refresh_index!
+    document_repository.refresh_index!
   end
 
   def api_delete(path,session)
