@@ -122,18 +122,15 @@ describe API::V1::Documents, elasticsearch: true do
       end
     end
 
-    pending 'id larger than 512 bytes' do
-      before do
+    context 'when the id is larger than 512 bytes' do
+      let(:id) do
         two_byte_character = '\u00b5'
         string_with_513_bytes_but_only_257_characters = 'x' + two_byte_character * 256
-        doc_params = { document_id: string_with_513_bytes_but_only_257_characters,
-                         title:       'my title',
-                         path:        'http://www.gov.gov/goo.html',
-                         created:     '2013-02-27T10:00:00Z',
-                         description: 'my desc',
-                         promote:     true,
-                         language:    'en' }
-        api_post doc_params, valid_session
+      end
+
+      before do
+        #fixme
+        post_document
       end
 
       it 'returns failure message as JSON' do
