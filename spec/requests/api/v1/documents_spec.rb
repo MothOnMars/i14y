@@ -233,15 +233,9 @@ describe API::V1::Documents, elasticsearch: true do
       end
     end
 
-    pending 'something terrible happens creating the document' do
+    context 'when something terrible happens creating the document' do
       before do
         allow(Document).to receive(:new) { raise_error(Exception) }
-        doc_params = { document_id: 'a1234',
-                         title:       'my title',
-                         path:        'http://www.gov.gov/goo.html',
-                         created:     '2013-02-27T10:00:00Z',
-                         description: 'my desc',
-                         promote:     true }
         api_post doc_params, valid_session
       end
 
