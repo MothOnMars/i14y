@@ -109,8 +109,10 @@ describe API::V1::Documents, elasticsearch: true do
       end
     end
 
-    pending 'slash in id' do
-      before { api_post doc_params.merge(document_id: 'a1/234'), valid_session }
+    context 'when the id contains a slash' do
+      let(:id) { 'a1/234' }
+      #FIXME
+      before { post_document }
 
       it 'returns failure message as JSON' do
         expect(response.status).to eq(400)

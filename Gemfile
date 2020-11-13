@@ -29,6 +29,8 @@ gem 'virtus'
 gem 'newrelic_rpm', '~> 4.2'
 gem 'airbrake', '~> 7.1'
 
+#TODO: add rubocop-rspec
+
 #gem 'patron', '~> 0.10.0'
 
 group :development, :test do
