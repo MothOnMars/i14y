@@ -166,7 +166,7 @@ describe DocumentSearch do
   context 'searching across multiple indexes' do
     before do
       document_create(language: 'en', title: 'title 1 common content', description: 'description 1 common content', created: DateTime.now, path: 'http://www.agency.gov/page1.html')
-      es_documents_index_name = [Document.index_namespace('other_agency_blogs'), 'v1'].join('-')
+      es_documents_index_name = [DocumentRepository.index_namespace('other_agency_blogs'), 'v1'].join('-')
       DocumentRepository.new(index_name: es_documents_index_name).create_index!
       client.indices.put_alias index: es_documents_index_name,
                                                           name: DocumentRepository.index_namespace('other_agency_blogs')
