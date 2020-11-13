@@ -81,7 +81,7 @@ describe API::V1::Documents, elasticsearch: true do
         #FIXME - need better helper method
         document_create(valid_params.merge(id: 'its_a_dupe'))
 
-        api_post valid_params.merge(id: 'its_a_dupe'), valid_session
+        api_post valid_params.merge(document_id: 'its_a_dupe'), valid_session
       end
 
       it 'returns failure message as JSON' do

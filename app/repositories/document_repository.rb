@@ -13,7 +13,6 @@ class DocumentRepository
 
     def serialize(document)
       # document is a hash
-      puts "before serde: #{document.class}"
       doc_hash = document.to_hash
       Serde.serialize_hash(doc_hash, doc_hash[:language], Document::LANGUAGE_FIELDS)
     end

@@ -96,7 +96,9 @@ module API
           document = Document.new(params)
           error!(document.errors.messages, 400) unless document.valid?
           #document.save(op_type: :create)
-          document_repository.save(document)
+          #FIXME
+          #DEFAULT_CLIENT.create(index: document_repository.index_name, body: document, type: '_doc', id: document.id)
+          document_repository.save(document, op_type: :create)
           ok("Your document was successfully created.")
         end
 
@@ -150,9 +152,11 @@ module API
             :changed, :promote, :language, :tags, :click_count
         end
         put ':document_id', requirements: { document_id: /.*/ } do
-          Document.index_name = Document.index_namespace(@collection_handle)
-          document = Document.find(params.delete(:document_id))
+          index_name = DocumentRepository.index_namespace(@collection_handle)
+          document_repository = DocumentRepository.new(index_name: index_name)
+          document = document_repository.find(params.delete(:document_id))
           serialized_params = Serde.serialize_hash(params, document.language, Document::LANGUAGE_FIELDS)
+          #FIXME - the update looks weird
           error!(document.errors.messages, 400) unless document.update(serialized_params)
           ok("Your document was successfully updated.")
         end
