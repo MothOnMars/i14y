@@ -18,9 +18,12 @@ class DocumentRepository
     end
 
     def deserialize(hash)
+      puts 'deserializing'
       doc_hash = hash['_source']
+      puts doc_hash
       deserialized_hash = Serde.deserialize_hash(doc_hash, doc_hash['language'], Document::LANGUAGE_FIELDS)
 
+      puts "deserialized_hash: #{deserialized_hash}"
       document = Document.new deserialized_hash
       document.instance_variable_set :@_id, hash['_id']
       document.instance_variable_set :@_index, hash['_index']

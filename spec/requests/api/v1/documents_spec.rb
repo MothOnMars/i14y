@@ -249,7 +249,7 @@ describe API::V1::Documents, elasticsearch: true do
 
   end
 
-  pending 'PUT /api/v1/documents/{document_id}' do
+  describe 'PUT /api/v1/documents/{document_id}' do
     let(:update_params) do
       {
         title:       'new title',
@@ -287,7 +287,7 @@ describe API::V1::Documents, elasticsearch: true do
       end
 
       it 'updates the document' do
-        document = Document.find(id)
+        document = document_repository.find(id)
         expect(document.path).to eq('http://www.next.gov/updated.html')
         expect(document.promote).to be_falsey
         expect(document.title).to eq('new title')

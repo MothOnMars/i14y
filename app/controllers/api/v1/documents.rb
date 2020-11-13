@@ -152,12 +152,18 @@ module API
             :changed, :promote, :language, :tags, :click_count
         end
         put ':document_id', requirements: { document_id: /.*/ } do
+          binding.pry
+          params[:id] = params.delete(:document_id)
           index_name = DocumentRepository.index_namespace(@collection_handle)
           document_repository = DocumentRepository.new(index_name: index_name)
-          document = document_repository.find(params.delete(:document_id))
+          document = document_repository.find(params[:id])
+
+          puts "language: #{document.language}"
           serialized_params = Serde.serialize_hash(params, document.language, Document::LANGUAGE_FIELDS)
           #FIXME - the update looks weird
-          error!(document.errors.messages, 400) unless document.update(serialized_params)
+          puts "serialized params in conroller: #{serialized_params}"
+
+          error!(document.errors.messages, 400) unless document_repository.save(serialized_params)
           ok("Your document was successfully updated.")
         end
 
