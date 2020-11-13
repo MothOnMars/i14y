@@ -249,7 +249,7 @@ describe API::V1::Documents, elasticsearch: true do
 
   end
 
-  describe 'PUT /api/v1/documents/{document_id}' do
+  pending 'PUT /api/v1/documents/{document_id}' do
     let(:update_params) do
       {
         title:       'new title',

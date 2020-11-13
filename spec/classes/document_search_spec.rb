@@ -1,6 +1,6 @@
 require 'rails_helper'
 
-describe DocumentSearch, skip: 'pending' do
+describe DocumentSearch do
   let(:query) { "common" }
   let(:handles) { %w(agency_blogs) }
   let(:search_options) do
@@ -23,38 +23,41 @@ describe DocumentSearch, skip: 'pending' do
   end
   let(:client) do
     #use default client
-    Elasticsearch::Client.new(log: Rails.env.development?,
-                                                              hosts: yaml['hosts'],
-                                                              user: yaml['user'],
-                                                              password: yaml['password'],
-                                                              randomize_hosts: true,
-                                                              retry_on_failure: true,
-                                                              reload_connections: true)
-
+    DEFAULT_CLIENT
+  end
+  let(:document_repository) do
+    #FIXME
+    es_documents_index_name = [DocumentRepository.index_namespace('agency_blogs'), 'v1'].join('-')
+    #Using a single shard prevents intermittent relevancy issues in tests
+    #https://www.elastic.co/guide/en/elasticsearch/guide/current/relevance-is-broken.html
+    DocumentRepository.new(settings: { index: { number_of_shards: 1 } }, index_name: es_documents_index_name)
   end
 
 
   before do
-    client.indices.delete(index: [Document.index_namespace('agency_blogs'), '*'].join('-'))
-    es_documents_index_name = [Document.index_namespace('agency_blogs'), 'v1'].join('-')
+    es_documents_index_name = [DocumentRepository.index_namespace('agency_blogs'), 'v1'].join('-')
+    #FIXME: delete by query
     #Using a single shard prevents intermittent relevancy issues in tests
     #https://www.elastic.co/guide/en/elasticsearch/guide/current/relevance-is-broken.html
-    Document.settings(index: { number_of_shards: 1 })
-    Document.create_index!(index: es_documents_index_name)
+    #DocumentRepository.settings(index: { number_of_shards: 1 })
+    document_repository.create_index!#(index_name: es_documents_index_name)
     client.indices.put_alias index: es_documents_index_name,
-                                                        name: Document.index_namespace('agency_blogs')
-    Document.index_name = Document.index_namespace('agency_blogs')
+                                                        name: DocumentRepository.index_namespace('agency_blogs')
+    #Document.index_name = Document.index_namespace('agency_blogs')
+  end
+
+  after do
+    DEFAULT_CLIENT.delete_by_query index: document_repository.index_name, q: '*:*', conflicts: 'proceed'
   end
 
   context 'when searching across a single index collection' do
     context 'when matching documents exist' do
       before do
-        Document.create(language: 'en',
+        document_create(language: 'en',
                         title: 'title 1 common content',
                         description: 'description 1 common content',
                         created: DateTime.now,
                         path: 'http://www.agency.gov/page1.html')
-        Document.refresh_index!
       end
 
       it 'returns results' do

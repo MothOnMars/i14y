@@ -9,7 +9,8 @@ class DocumentRepository
   #index_name Document.index_namespace #FIXME
  client DEFAULT_CLIENT
 
-  settings index: { number_of_shards: 1 }
+ #FIXME - this shouldnt be one shard in prod 
+ settings index: { number_of_shards: 1 }
 
     def serialize(document)
       # document is a hash
