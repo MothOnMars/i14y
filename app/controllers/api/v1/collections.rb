@@ -54,6 +54,8 @@ module API
           DocumentRepository.new.create_index!(index: es_documents_index_name)
           DEFAULT_CLIENT.indices.put_alias index: es_documents_index_name,
                                                               name: DocumentRepository.index_namespace(handle)
+          DEFAULT_CLIENT.cat.indices
+          DEFAULT_CLIENT.cat.aliases
           ok("Your collection was successfully created.")
         end
 

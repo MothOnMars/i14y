@@ -92,7 +92,7 @@ module API
         post do
           document_repository = DocumentRepository.new(index_name: DocumentRepository.index_namespace(@collection_handle))
 #          Document.index_name = Document.index_namespace(@collection_handle)
-          id = params.delete(:document_id)
+          params[:id] = params.delete(:document_id)
           document = Document.new(params)
           error!(document.errors.messages, 400) unless document.valid?
           #document.save(op_type: :create)

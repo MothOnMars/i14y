@@ -17,7 +17,8 @@ class Document
 
   #delegate :category, to: :video
   #delegate :index_namespace, to: DocumentRepository
-
+#FIXME - remove mapping?
+  attribute :id, String, mapping: { type: 'keyword' }
   attribute :path, String, mapping: { type: 'keyword' }
   validates :path, presence: true
   attribute :language, String, mapping: { type: 'keyword' }

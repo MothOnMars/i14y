@@ -7,6 +7,7 @@ class Collection
   extend ActiveModel::Callbacks
 include Virtus.model
 
+  #FIXME - remove mapping?
   attribute :id, String, mapping: { type: 'keyword' }
   attribute :token, String, mapping: { type: 'keyword' }
   validates :token, presence: true

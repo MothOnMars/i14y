@@ -33,7 +33,6 @@ describe API::V1::Documents, elasticsearch: true do
 
   describe 'POST /api/v1/documents' do
     subject(:post_document) do
-      binding.pry
       post "/api/v1/documents", params: valid_params, headers: valid_session
     end
     let(:valid_params) do
@@ -65,6 +64,7 @@ describe API::V1::Documents, elasticsearch: true do
       end
 
       it 'stores the appropriate fields in the Elasticsearch document' do
+        binding.pry
         document = Document.find(id)
         expect(document.path).to eq('http://www.gov.gov/goo.html')
         expect(document.promote).to be_truthy
