@@ -161,7 +161,7 @@ describe API::V1::Documents, elasticsearch: true do
       end
     end
 
-    context 'a required parameter is empty/blank' do
+    context 'when a required parameter is empty/blank' do
       before do
         indoc_params = doc_params.merge({ 'title' => ' ' })
         api_post indoc_params, valid_session
@@ -193,7 +193,7 @@ describe API::V1::Documents, elasticsearch: true do
       end
     end
 
-    pending 'failed authentication/authorization' do
+    context 'failed authentication/authorization' do
       before do
         doc_params = { document_id: 'a1234',
                          title:       'my title',
