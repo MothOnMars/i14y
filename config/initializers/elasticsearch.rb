@@ -8,6 +8,7 @@ DEFAULT_CLIENT = Elasticsearch::Client.new(log: Rails.env.development?,
                                                               retry_on_failure: true,
                                                               reload_connections: true)
 
+#TODO: log to Rails log
 if true # Rails.env.development?
   logger = ActiveSupport::Logger.new(STDERR)
   logger.level = Logger::DEBUG

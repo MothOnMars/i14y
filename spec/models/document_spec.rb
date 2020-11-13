@@ -18,7 +18,7 @@ describe Document do
   let(:repository) do
     handle = 'test_index'
     es_documents_index_name = [DocumentRepository.index_namespace(handle), 'v1'].join('-')
-    DocumentRepository.new(index: es_documents_index_name)
+    DocumentRepository.new(index_name: es_documents_index_name)
   end
 
   before(:all) do

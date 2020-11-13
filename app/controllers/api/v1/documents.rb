@@ -90,7 +90,7 @@ module API
         end
 
         post do
-          document_repository = DocumentRepository.new(index: DocumentRepository.index_namespace(@collection_handle))
+          document_repository = DocumentRepository.new(index_name: DocumentRepository.index_namespace(@collection_handle))
 #          Document.index_name = Document.index_namespace(@collection_handle)
           id = params.delete(:document_id)
           document = Document.new(params)
