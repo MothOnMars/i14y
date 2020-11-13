@@ -141,7 +141,7 @@ describe API::V1::Documents, elasticsearch: true do
       end
     end
 
-    pending 'missing language param' do
+    context 'when the language param is missing'  do
       before do
         doc_params = { document_id: 'a1234',
                          title:       'my title',
@@ -152,7 +152,7 @@ describe API::V1::Documents, elasticsearch: true do
       end
 
       it 'uses English (en) as default' do
-        expect(Document.find('a1234').language).to eq('en')
+        expect(document_repository.find('a1234').language).to eq('en')
       end
     end
 
