@@ -215,16 +215,14 @@ describe API::V1::Documents, elasticsearch: true do
       end
     end
 
-    pending 'something terrible happens during authentication' do
+    context 'when something terrible happens during authentication' do
+      let(:invalid_session) do
+        credentials = ActionController::HttpAuthentication::Basic.encode_credentials 'test_index', 'bad_key'
+        { HTTP_AUTHORIZATION: credentials }
+      end
+
       before do
-        allow(Collection).to receive(:find).and_raise(Elasticsearch::Transport::Transport::Errors::BadRequest)
-        doc_params = { document_id: 'a1234',
-                         title:       'my title',
-                         path:        'http://www.gov.gov/goo.html',
-                         created:     '2013-02-27T10:00:00Z',
-                         description: 'my desc',
-                         promote:    true }
-        api_post doc_params, valid_session
+        api_post doc_params, invalid_session
       end
 
       it 'returns error message as JSON' do
