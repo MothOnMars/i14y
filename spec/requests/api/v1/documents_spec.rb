@@ -170,7 +170,7 @@ describe API::V1::Documents, elasticsearch: true do
       end
     end
 
-    pending 'path URL is poorly formatted' do
+    describe 'path URL is poorly formatted' do
       before do
         indoc_params = { document_id: 'a1234',
                            title:       'weird URL with blank',

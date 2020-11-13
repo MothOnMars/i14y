@@ -42,10 +42,12 @@ RSpec.configure do |config|
   end
 
   config.before :each, elasticsearch: true do
+    #fix me - move to api/doc spec?
     begin
       # FIXME
-      Document.create_index!
-      Document.refresh_index!
+      #document_repository = DocumentRepository.new(index_name: DocumentRepository.index_namespace)
+      #Document.create_index!
+      #Document.refresh_index!
       #FIXME - this causes random logging 
     rescue => Elasticsearch::Transport::Transport::Errors::NotFound
       # This kills "Index does not exist" errors being written to console
@@ -56,6 +58,6 @@ RSpec.configure do |config|
   end
 
   config.after :each, elasticsearch: true do
-    DEFAULT_CLIENT.indices.delete index: '*documents*'
+    #DEFAULT_CLIENT.indices.delete index: '*documents*'
   end
 end
