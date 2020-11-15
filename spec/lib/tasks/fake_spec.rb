@@ -13,8 +13,8 @@ describe 'create fake test documents' do
     end
 
     it 'generates the required number of documents' do
-      expect(Document).to receive(:create).exactly(3).times
       Rake::Task['fake:documents'].invoke('my_drawer','3')
+      binding.pry
     end
   end
 end

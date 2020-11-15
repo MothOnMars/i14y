@@ -4,10 +4,13 @@ namespace :fake do
   # rake fake:documents[my_drawer,10]
 
   task :documents, [:index_name, :document_count] => [:environment] do |_t, args|
-    Document.index_name = Document.index_namespace(args[:index_name])
+    #Document.index_name = Document.index_namespace(args[:index_name])
+    index_name = DocumentRepository.index_namespace(args[:index_name])
+    document_repository = DocumentRepository.new(index_name: index_name)
+    document_repository.create_index!
     count = args[:document_count].to_i
 
-    count.times { Document.create(fake_doc) }
+    count.times { document_repository.save(fake_doc) }
   end
 
   private
