@@ -6,7 +6,7 @@ executors:
       - image: circleci/ruby:${RUBY_VERSION}-node-browsers
     working_directory: ~/app
     environment:
-      ES_VER: 6.8.6
+      ES_VER: 7.9.1
 
 jobs:
   build:
@@ -20,7 +20,7 @@ jobs:
       - checkout
       - run: cp -p config/secrets_example.yml config/secrets.yml
       - restore_cache:
-          key: elasticsearch-6.8.6-0
+          key: elasticsearch-7.9.1-0
       - run:
           name: Installing Elasticsearch
           command: |
@@ -35,9 +35,9 @@ jobs:
               for plugin in ${PLUGINS[*]}; do ~/elasticsearch-$ES_VER/bin/elasticsearch-plugin install $plugin; done
             fi
       - save_cache:
-          key: elasticsearch-6.8.6-0
+          key: elasticsearch-7.9.1-0
           paths:
-            - ~/elasticsearch-6.8.6
+            - ~/elasticsearch-7.9.1
       - run:
           name: Run Elasticsearch in background
           command: ~/elasticsearch-$ES_VER/bin/elasticsearch -E http.port=9200

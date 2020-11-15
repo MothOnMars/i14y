@@ -14,7 +14,6 @@ describe 'create fake test documents' do
 
     it 'generates the required number of documents' do
       Rake::Task['fake:documents'].invoke('my_drawer','3')
-      binding.pry
     end
   end
 end

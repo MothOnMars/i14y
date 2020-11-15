@@ -152,7 +152,7 @@ module API
             :changed, :promote, :language, :tags, :click_count
         end
         put ':document_id', requirements: { document_id: /.*/ } do
-          binding.pry
+          #binding.pry
           params[:id] = params.delete(:document_id)
           index_name = DocumentRepository.index_namespace(@collection_handle)
           document_repository = DocumentRepository.new(index_name: index_name)
