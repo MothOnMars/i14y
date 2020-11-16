@@ -121,9 +121,9 @@ describe API::V1::Collections do
       end
     end
 
-    pending 'something terrible happens' do
+    describe 'something terrible happens' do
       before do
-        allow(Collection).to receive(:create) { raise_error(Exception) }
+        allow(Collection).to receive(:new) { raise_error(Exception) }
         post '/api/v1/collections', params: valid_params, headers: valid_session
       end
 
