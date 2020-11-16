@@ -182,6 +182,7 @@ describe API::V1::Collections do
 #        Document.create(hash2)
         document_repository.save(Document.new(hash1))
         document_repository.save(Document.new(hash2))
+        document_repository.refresh_index!
         get_collection
       end
 

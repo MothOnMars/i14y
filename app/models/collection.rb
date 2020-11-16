@@ -3,6 +3,8 @@ require 'active_model'
 class Collection
   #include Elasticsearch::Persistence::Model
     include ActiveModel::Model
+    #include ActiveModel::Serialization #necessary?
+    include ActiveModel::Serializers::JSON
   include ActiveModel::Validations
   extend ActiveModel::Callbacks
 include Virtus.model
@@ -25,14 +27,12 @@ include Virtus.model
   end
 
   def last_document_sent
-    binding.pry
     document_repository.search("*:*", {size:1, sort: "updated_at:desc"}).results.first.updated_at.utc.to_s rescue nil
   end
 
   #private
 
   def document_repository
-    binding.pry
     @document_repository ||= DocumentRepository.new(index_name: DocumentRepository.index_namespace(self.id))
   end
 end
