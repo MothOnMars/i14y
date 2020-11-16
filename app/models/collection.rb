@@ -12,16 +12,27 @@ include Virtus.model
   attribute :token, String, mapping: { type: 'keyword' }
   validates :token, presence: true
   #validate id?
+    # see https://github.com/elastic/elasticsearch-rails/issues/544
+  # TODO: add specs
+  attribute :created_at, Time, default: lambda { |o,a| Time.now.utc }
+  attribute :updated_at, Time, default: lambda { |o,a| Time.now.utc }
 
 
+
+  #NEED UNIT SPECS
   def document_total
-    Document.index_name = Document.index_namespace(self.id)
-    Document.count
+    document_repository.count
   end
 
   def last_document_sent
-    Document.index_name = Document.index_namespace(self.id)
-    Document.search("*:*", {size:1, sort: "updated_at:desc"}).results.first.updated_at.utc.to_s rescue nil
+    binding.pry
+    document_repository.search("*:*", {size:1, sort: "updated_at:desc"}).results.first.updated_at.utc.to_s rescue nil
   end
 
+  #private
+
+  def document_repository
+    binding.pry
+    @document_repository ||= DocumentRepository.new(index_name: DocumentRepository.index_namespace(self.id))
+  end
 end

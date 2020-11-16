@@ -35,6 +35,11 @@ class Document
   attribute :tags, String, mapping: { type: 'keyword' }
   attribute :click_count, Integer
 
+  # see https://github.com/elastic/elasticsearch-rails/issues/544
+  # TODO: add specs
+  attribute :created_at, Time, default: lambda { |o,a| Time.now.utc }
+  attribute :updated_at, Time, default: lambda { |o,a| Time.now.utc }
+
   #before_save { self.changed = changed.presence || created }
 
   LANGUAGE_FIELDS = [:title, :description, :content]

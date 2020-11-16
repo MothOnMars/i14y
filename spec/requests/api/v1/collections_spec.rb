@@ -162,7 +162,7 @@ describe API::V1::Collections do
     end
   end
 
-  pending 'GET /api/v1/collections/{handle}' do
+  describe 'GET /api/v1/collections/{handle}' do
     subject(:get_collection) do
       get '/api/v1/collections/agency_blogs', headers: valid_session
     end
