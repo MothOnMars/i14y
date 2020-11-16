@@ -56,8 +56,8 @@ describe API::V1::Documents, elasticsearch: true do
       end
 
       #FIXME: - intermittent failure:
-      # rspec ./spec/requests/api/v1/documents_spec.rb -e POST --seed 30343
-      xit 'returns success message as JSON' do
+      # rspec ./spec/requests/api/v1/documents_spec.rb -e POST --seed 30343 --fail-fast
+      it 'returns success message as JSON' do
         expect(response.status).to eq(201)
         expect(JSON.parse(response.body))
             .to match(hash_including('status' => 200,

@@ -37,6 +37,7 @@ class Document
 
   # see https://github.com/elastic/elasticsearch-rails/issues/544
   # TODO: add specs
+  # TODO: make sure updated_at is updated accordingly
   attribute :created_at, Time, default: lambda { |o,a| Time.now.utc }
   attribute :updated_at, Time, default: lambda { |o,a| Time.now.utc }
 
