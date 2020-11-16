@@ -189,9 +189,10 @@ MASTER
 
         desc "Delete a document"
         delete ':document_id', requirements: { document_id: /.*/ } do
-          Document.index_name = Document.index_namespace(@collection_handle)
-          document = Document.find(params.delete(:document_id))
-          error!(document.errors.messages, 400) unless document.destroy
+          id = params[:document_id]
+          index_name = DocumentRepository.index_namespace(@collection_handle)
+          document_repository = DocumentRepository.new(index_name: index_name)
+          error!(document.errors.messages, 400) unless document_repository.delete(id)
           ok("Your document was successfully deleted.")
         end
       end

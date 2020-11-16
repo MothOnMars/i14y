@@ -311,7 +311,7 @@ describe API::V1::Documents, elasticsearch: true do
     end
   end
 
-  pending 'DELETE /api/v1/documents/{document_id}' do
+  describe 'DELETE /api/v1/documents/{document_id}' do
     context 'success case' do
       before do
         document_create(id:          id,
@@ -336,7 +336,7 @@ describe API::V1::Documents, elasticsearch: true do
       end
 
       it 'deletes the document' do
-        expect(Document.exists?(id)).to be_falsey
+        expect(document_repository.exists?(id)).to be_falsey
       end
 
       it_behaves_like 'a data modifying request made during read-only mode'
