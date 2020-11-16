@@ -48,6 +48,7 @@ describe DocumentSearch do
 
   after do
     DEFAULT_CLIENT.delete_by_query index: document_repository.index_name, q: '*:*', conflicts: 'proceed'
+    document_repository.refresh_index!
   end
 
   context 'when searching across a single index collection' do
