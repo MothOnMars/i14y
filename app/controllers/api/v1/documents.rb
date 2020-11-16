@@ -151,19 +151,39 @@ module API
           at_least_one_of :title, :path, :created, :content, :description,
             :changed, :promote, :language, :tags, :click_count
         end
+
+=begin
+MASTER
+
         put ':document_id', requirements: { document_id: /.*/ } do
-          binding.pry
+          Document.index_name = Document.index_namespace(@collection_handle)
+          document = Document.find(params.delete(:document_id))
+          serialized_params = Serde.serialize_hash(params, document.language, Document::LANGUAGE_FIELDS)
+          error!(document.errors.messages, 400) unless document.update(serialized_params)
+          ok("Your document was successfully updated.")
+        end
+=end
+
+        put ':document_id', requirements: { document_id: /.*/ } do
           params[:id] = params.delete(:document_id)
           index_name = DocumentRepository.index_namespace(@collection_handle)
           document_repository = DocumentRepository.new(index_name: index_name)
           document = document_repository.find(params[:id])
 
-          puts "language: #{document.language}"
-          serialized_params = Serde.serialize_hash(params, document.language, Document::LANGUAGE_FIELDS)
+          #binding.pry
+          puts "params: #{params}"
+          puts "document: #{document.attributes}"
+          #puts "serializing in controller"
+          #serialized_params = Serde.serialize_hash(params, document.language, Document::LANGUAGE_FIELDS)
           #FIXME - the update looks weird
-          puts "serialized params in conroller: #{serialized_params}"
+          #puts "serialized params in conroller: #{serialized_params}"
 
-          error!(document.errors.messages, 400) unless document_repository.save(serialized_params)
+          #problem - params are not serialized when raw params are passed
+          puts "updating in controller"
+          #FIXME: CLEAN THIS UP
+          error!(document.errors.messages, 400) unless document_repository.update(params.merge(language: document.language))
+          puts "after update: #{document_repository.find(params[:id]).changed}"
+          puts document_repository.find(params[:id])
           ok("Your document was successfully updated.")
         end
 

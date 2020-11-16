@@ -4,6 +4,7 @@ module DocumentCrud
   def document_create(params)
     #FIXME - need better helper
     #create in batches, then refresh
+    puts 'creating doc without API'
     document = Document.new(params)
     document_repository.save(document)
     document_repository.refresh_index!

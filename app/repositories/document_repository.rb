@@ -13,8 +13,11 @@ class DocumentRepository
  settings index: { number_of_shards: 1 }
 
     def serialize(document)
-      # document is a hash
-      doc_hash = document.to_hash
+      puts "SERIALIZING"
+      # FIXME
+      doc_hash = ActiveSupport::HashWithIndifferentAccess.new document.to_hash
+      #doc_hash = document.to_hash
+      puts "DOC HASH BEING SERIALIZED: #{doc_hash}"
       Serde.serialize_hash(doc_hash, doc_hash[:language], Document::LANGUAGE_FIELDS)
     end
 

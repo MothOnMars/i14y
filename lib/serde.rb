@@ -1,5 +1,8 @@
 module Serde
+  #TODO: make language required?
   def self.serialize_hash(hash, language, language_field_keys)
+    puts "ORIG HASH IN SERDE: #{hash}"
+   # hash = ActiveSupport::HashWithIndifferentAccess.new hash #FIXME
     language_field_keys.each do |key|
       value = hash[key.to_sym]
       if value.present?
@@ -13,6 +16,7 @@ module Serde
     hash[:changed] = hash[:changed].presence || hash[:created]
     #will this explode if save is called twice?
     hash[:tags] = hash[:tags].extract_array if hash[:tags].present?
+    puts "AFTER SERIALIZING: #{hash[:changed]}"
     hash
   end
 

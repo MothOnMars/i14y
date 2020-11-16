@@ -249,7 +249,7 @@ describe API::V1::Documents, elasticsearch: true do
 
   end
 
-  pending 'PUT /api/v1/documents/{document_id}' do
+  describe 'PUT /api/v1/documents/{document_id}' do
     let(:update_params) do
       {
         title:       'new title',
@@ -275,6 +275,7 @@ describe API::V1::Documents, elasticsearch: true do
                         promote:     true,
                         path:        'http://www.gov.gov/url4.html')
 
+        puts 'updating doc via api'
         api_put "/api/v1/documents/#{URI.encode(id)}", update_params, valid_session
       end
 
@@ -299,6 +300,14 @@ describe API::V1::Documents, elasticsearch: true do
       end
 
       it_behaves_like 'a data modifying request made during read-only mode'
+
+      context 'when the document does not exist' do
+        #need spec
+      end
+
+      context 'when only certain fields are updated' do
+        
+      end
     end
   end
 
