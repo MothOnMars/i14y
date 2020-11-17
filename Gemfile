@@ -1,5 +1,6 @@
 source 'https://rubygems.org'
 gem 'rails', ' ~> 5.2.0'
+
 gem 'rack-cors', '~> 1.0.5'
 gem 'grape', '~> 1.3.2'
 
