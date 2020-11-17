@@ -27,7 +27,8 @@ include Virtus.model
   end
 
   def last_document_sent
-    document_repository.search("*:*", {size:1, sort: "updated_at:desc"}).results.first.updated_at.utc.to_s rescue nil
+    #FIXME: need spec for the rescue condition
+    document_repository.search("*:*", {size:1, sort: "updated_at:desc"}).results.first.updated_at.utc.to_s #rescue nil
   end
 
   #private
