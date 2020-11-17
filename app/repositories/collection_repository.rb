@@ -8,4 +8,5 @@ class CollectionRepository
 
   klass Collection
   client DEFAULT_CLIENT
+  index_name index_namespace
 end
