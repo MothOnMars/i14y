@@ -3,7 +3,7 @@ require 'rake'
 
 describe 'create fake test documents' do
 
-  pending 'fake:documents' do
+  describe 'fake:documents' do
     let(:task_name) { 'fake:documents' }
 
     before(:all) do
@@ -14,7 +14,9 @@ describe 'create fake test documents' do
 
     it 'generates the required number of documents' do
       Rake::Task['fake:documents'].invoke('my_drawer','3')
-      binding.pry
+      expect(
+        DEFAULT_CLIENT.count(index: 'test-i14y-documents-my_drawer*')['count']
+      ).to eq(3)
     end
   end
 end

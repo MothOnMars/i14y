@@ -25,6 +25,6 @@ module TestServices
 
   def delete_es_indexes
     #Elasticsearch::Persistence.client.indices.delete(index: [Rails.env, I14y::APP_NAME, '*'].join('-'))
-    client.indices.delete(index: [Rails.env, I14y::APP_NAME, '*'].join('-'))
+    DEFAULT_CLIENT.indices.delete(index: [Rails.env, I14y::APP_NAME, '*'].join('-'))
   end
 end

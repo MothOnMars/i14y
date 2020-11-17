@@ -10,17 +10,18 @@ namespace :fake do
     document_repository.create_index!
     count = args[:document_count].to_i
 
-    count.times { document_repository.save(fake_doc) }
+    count.times { document_repository.save(Document.new(fake_doc)) }
+    document_repository.refresh_index!
   end
 
   private
 
   def fake_doc
-    { _id: Time.now.to_f.to_s,
-      title: Faker::TwinPeaks.character,
+    { id: Time.now.to_f.to_s,
+      title: Faker::TvShows::TwinPeaks.character,
       path: fake_url,
       created: [Faker::Time.between(3.years.ago, Date.today).to_json, nil].sample,
-      description:  [nil, Faker::TwinPeaks.location].sample,
+      description:  [nil, Faker::TvShows::TwinPeaks.location].sample,
       content: quotes,
       promote: [true,false].sample,
       language: 'en',
@@ -31,7 +32,7 @@ namespace :fake do
   def fake_url
     domain = [[nil,'www','coffee','pie'].sample, 'twinpeaks.gov'].compact.join('.')
     directories = [%w(plastic fish mill).sample, %w(gum whittling fire).sample].join('/')
-    file = Faker::TwinPeaks.location.parameterize
+    file = Faker::TvShows::TwinPeaks.location.parameterize
     filetype = %w(html doc pdf).sample
     protocol = %w(http https).sample
     "#{protocol}://#{domain}/#{directories}/#{file}.#{filetype}"
@@ -39,7 +40,7 @@ namespace :fake do
 
   def quotes
     quotes = ''
-    10.times { quotes << Faker::TwinPeaks.quote + ' ' }
+    10.times { quotes << Faker::TvShows::TwinPeaks.quote + ' ' }
     quotes
   end
 end
