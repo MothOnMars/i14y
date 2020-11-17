@@ -10,8 +10,8 @@ gem 'capistrano-rails', '~> 1.3'
 gem 'capistrano-bundler', '~> 1.2'
 gem 'capistrano-passenger', '~> 0.2.0'
 
-gem "elasticsearch-persistence", '~> 6.0'#, require: 'elasticsearch/persistence/model'
-gem 'elasticsearch', '~> 6.0' #, '5.0.4'
+gem "elasticsearch-persistence", '~> 6.0'
+gem 'elasticsearch', '~> 6.0'
 gem 'elasticsearch-dsl', '~> 0.1.9'
 
 gem 'newrelic_rpm', '~> 4.2'
