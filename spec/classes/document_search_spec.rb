@@ -175,6 +175,8 @@ describe DocumentSearch do
       document_create(language: 'en', title: 'other title 1 common content', description: 'other description 1 common content', created: DateTime.now, path: 'http://www.otheragency.gov/page1.html')
     end
 
+    # fix intermittent failure:
+    # rspec ./spec/ --seed 29014 --fail-fast
     it 'returns results from all indexes' do
       document_search = DocumentSearch.new(handles: %w(agency_blogs other_agency_blogs), language: :en, query: "common", size: 10, offset: 0)
       document_search_results = document_search.search

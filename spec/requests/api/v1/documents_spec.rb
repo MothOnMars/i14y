@@ -348,6 +348,7 @@ describe API::V1::Documents, elasticsearch: true do
       end
 
       it 'returns error message as JSON' do
+        puts JSON.parse(response.body)
         expect(response.status).to eq(400)
         expect(JSON.parse(response.body))
             .to match(hash_including('status' => 400,

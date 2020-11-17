@@ -37,6 +37,12 @@ RSpec.configure do |config|
     TestServices::create_es_indexes
   end
 
+  config.before do
+    # FIXME: we should also be able to purge collections, but that causes intermittent failures
+    # rspec ./spec/ --seed 29014 --fail-fast
+    DEFAULT_CLIENT.delete_by_query index: 'test-i14y-documents*', q: '*:*', conflicts: 'proceed'
+  end
+
   config.after(:suite) do
     TestServices::delete_es_indexes
   end
