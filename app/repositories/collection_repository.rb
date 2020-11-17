@@ -5,7 +5,7 @@ class CollectionRepository
   extend NamespacedIndex
 
   klass Collection
- client DEFAULT_CLIENT
+  client DEFAULT_CLIENT
 
  #index_name Collection.index_namespace # FIXME
 
