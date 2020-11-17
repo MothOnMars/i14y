@@ -3,13 +3,12 @@
 require 'active_model'
 
 class Collection
-  #include Elasticsearch::Persistence::Model
-    include ActiveModel::Model
-    #include ActiveModel::Serialization #necessary?
-    include ActiveModel::Serializers::JSON
+  include ActiveModel::Model
+  include ActiveModel::Serializers::JSON
   include ActiveModel::Validations
+  include Virtus.model
+
   extend ActiveModel::Callbacks
-include Virtus.model
 
   #FIXME - remove mapping?
   attribute :id, String, mapping: { type: 'keyword' }
@@ -21,8 +20,6 @@ include Virtus.model
   attribute :created_at, Time, default: lambda { |o,a| Time.now.utc }
   attribute :updated_at, Time, default: lambda { |o,a| Time.now.utc }
 
-
-
   #NEED UNIT SPECS
   def document_total
     document_repository.count
@@ -33,7 +30,7 @@ include Virtus.model
     document_repository.search("*:*", {size:1, sort: "updated_at:desc"}).results.first.updated_at.utc.to_s #rescue nil
   end
 
-  #private
+  private
 
   def document_repository
     @document_repository ||= DocumentRepository.new(index_name: DocumentRepository.index_namespace(self.id))
