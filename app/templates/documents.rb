@@ -216,6 +216,7 @@ class Documents
     end
   end
 
+  #TODO: determine if I can prevent fields from being auto-created
   def dynamic_templates(json)
     json.dynamic_templates do
       language_templates(json)

@@ -1,4 +1,5 @@
 namespace :i14y do
+  #TODO: make sure this can run twice without blowing up
   desc "Creates templates, indexes, and reader/writer aliases for all i14y models"
   task setup: :environment do
     Dir[Rails.root.join('app', 'templates', '*.rb')].each do |template_generator|
@@ -8,14 +9,15 @@ namespace :i14y do
       DEFAULT_CLIENT.indices.put_template(name: entity_name,
                                                              body: template_generator.body,
                                                              order: 0,
-                                                             create: true)
+                                                             create: true) #TODO: make sure this can run twice without blowing up
     end
-    es_collections_index_name = [Collection.index_namespace, 'v1'].join('-')
+    es_collections_index_name = [CollectionRepository.index_namespace, 'v1'].join('-')
 
     CollectionRepository.new.create_index!(index: es_collections_index_name)
     DEFAULT_CLIENT.indices.put_alias index: es_collections_index_name, name: CollectionRepository.index_name
   end
 
+  # ADD WARNING THAT THIS DOES NOT WORK
   desc "Copies data from one version of the i14y index to the next (e.g., collections, documents) and updates the alias"
   task :reindex, [:entity_name] => [:environment] do |_t, args|
     entity_name = args.entity_name
