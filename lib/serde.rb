@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 module Serde
   #TODO: make language required?
   def self.serialize_hash(hash, language, language_field_keys)

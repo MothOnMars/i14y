@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 class CollectionRepository
   include Elasticsearch::Persistence::Repository
   include Elasticsearch::Persistence::Repository::DSL
