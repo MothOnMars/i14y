@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 class DocumentSearch
   NO_HITS = { "hits" => { "total" => 0, "hits" => [] }}
 
