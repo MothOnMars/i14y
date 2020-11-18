@@ -31,8 +31,9 @@ module TestServices
     document_repository =  DocumentRepository.new(settings: { index: { number_of_shards: 1 } }, index_name: es_documents_index_name)
     #document_repository.create_index!#(index_name: es_documents_index_name)
     #FIXME rescue nil - only create index once
-    puts DEFAULT_CLIENT.indices.get_settings(index: es_documents_index_name)["number_of_shards"].to_s
-    binding.pry
+    puts "shards: #{DEFAULT_CLIENT.indices.get_settings(index: es_documents_index_name)["number_of_shards"].to_s}"
+    #TODO: ensure the ag blogs index isn't left behind after collections api spec
+    DEFAULT_CLIENT.indices.delete(index: es_documents_index_name)
     DEFAULT_CLIENT.indices.create(index: es_documents_index_name, body: { settings: { number_of_shards: 1 } }) unless DEFAULT_CLIENT.indices.exists?(index: "test-i14y-documents-#{handle}-v1")
     DEFAULT_CLIENT.indices.put_alias index: es_documents_index_name,
                                                         name: DocumentRepository.index_namespace(handle)
