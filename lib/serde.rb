@@ -16,7 +16,6 @@ module Serde
     hash[:changed] = hash[:changed].presence || hash[:created]
     #will this explode if save is called twice?
     hash[:tags] = hash[:tags].extract_array if hash[:tags].present?
-    puts "AFTER SERIALIZING: #{hash[:changed]}"
     hash
   end
 

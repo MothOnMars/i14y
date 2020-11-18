@@ -32,6 +32,11 @@ module API
           Elasticsearch::Transport::Transport::Errors::BadRequest
           false
         end
+
+        def document_repository
+          index_name = DocumentRepository.index_namespace(@collection_handle)
+          DocumentRepository.new(index_name: index_name)
+        end
       end
 
       before do
@@ -90,14 +95,9 @@ module API
         end
 
         post do
-          document_repository = DocumentRepository.new(index_name: DocumentRepository.index_namespace(@collection_handle))
-#          Document.index_name = Document.index_namespace(@collection_handle)
           params[:id] = params.delete(:document_id)
           document = Document.new(params)
           error!(document.errors.messages, 400) unless document.valid?
-          #document.save(op_type: :create)
-          #FIXME
-          #DEFAULT_CLIENT.create(index: document_repository.index_name, body: document, type: '_doc', id: document.id)
           document_repository.save(document, op_type: :create)
           ok("Your document was successfully created.")
         end
@@ -152,46 +152,17 @@ module API
             :changed, :promote, :language, :tags, :click_count
         end
 
-=begin
-MASTER
-
-        put ':document_id', requirements: { document_id: /.*/ } do
-          Document.index_name = Document.index_namespace(@collection_handle)
-          document = Document.find(params.delete(:document_id))
-          serialized_params = Serde.serialize_hash(params, document.language, Document::LANGUAGE_FIELDS)
-          error!(document.errors.messages, 400) unless document.update(serialized_params)
-          ok("Your document was successfully updated.")
-        end
-=end
-
         put ':document_id', requirements: { document_id: /.*/ } do
           params[:id] = params.delete(:document_id)
-          index_name = DocumentRepository.index_namespace(@collection_handle)
-          document_repository = DocumentRepository.new(index_name: index_name)
           document = document_repository.find(params[:id])
-
-          #binding.pry
-          puts "params: #{params}"
-          puts "document: #{document.attributes}"
-          #puts "serializing in controller"
-          #serialized_params = Serde.serialize_hash(params, document.language, Document::LANGUAGE_FIELDS)
-          #FIXME - the update looks weird
-          #puts "serialized params in conroller: #{serialized_params}"
-
-          #problem - params are not serialized when raw params are passed
-          puts "updating in controller"
-          #FIXME: CLEAN THIS UP
-          error!(document.errors.messages, 400) unless document_repository.update(params.merge(language: document.language))
-          puts "after update: #{document_repository.find(params[:id]).changed}"
-          puts document_repository.find(params[:id])
+          params.merge!(language: document.language)
+          error!(document.errors.messages, 400) unless document_repository.update(params)
           ok("Your document was successfully updated.")
         end
 
         desc "Delete a document"
         delete ':document_id', requirements: { document_id: /.*/ } do
           id = params[:document_id]
-          index_name = DocumentRepository.index_namespace(@collection_handle)
-          document_repository = DocumentRepository.new(index_name: index_name)
           error!(document.errors.messages, 400) unless document_repository.delete(id)
           ok("Your document was successfully deleted.")
         end
