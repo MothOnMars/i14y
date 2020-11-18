@@ -29,7 +29,9 @@ module TestServices
     #Using a single shard prevents intermittent relevancy issues in tests
     #https://www.elastic.co/guide/en/elasticsearch/guide/current/relevance-is-broken.html
     document_repository =  DocumentRepository.new(settings: { index: { number_of_shards: 1 } }, index_name: es_documents_index_name)
-    document_repository.create_index!#(index_name: es_documents_index_name)
+    #document_repository.create_index!#(index_name: es_documents_index_name)
+    #FIXME rescue nil - only create index once
+    DEFAULT_CLIENT.indices.create(index: es_documents_index_name, body: { settings: { number_of_shards: 1 } }) rescue nil
     DEFAULT_CLIENT.indices.put_alias index: es_documents_index_name,
                                                         name: DocumentRepository.index_namespace(handle)
 
