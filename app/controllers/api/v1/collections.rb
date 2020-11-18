@@ -47,9 +47,9 @@ module API
           handle = params[:handle]
           collection = Collection.new(id: handle, token: params[:token])
           error!(collection.errors.messages, 400) unless collection.valid?
-          collection_repository = CollectionRepository.new.save(collection)
           es_documents_index_name = [DocumentRepository.index_namespace(handle), 'v1'].join('-')
           DocumentRepository.new.create_index!(index: es_documents_index_name)
+          collection_repository = CollectionRepository.new.save(collection) #TODO: initialize CR once
           DEFAULT_CLIENT.indices.put_alias(index: es_documents_index_name,
                                            name: DocumentRepository.index_namespace(handle))
           ok("Your collection was successfully created.")
@@ -60,7 +60,7 @@ module API
           check_updates_allowed
           handle = params.delete(:handle)
           error!(collection.errors.messages, 400) unless CollectionRepository.new.delete(handle)
-          #todo: this with a delete_index
+          #todo: add spec for deleting multiple index versions
           DEFAULT_CLIENT.indices.delete(index: [DocumentRepository.index_namespace(handle), '*'].join('-'))
           ok("Your collection was successfully deleted.")
         end

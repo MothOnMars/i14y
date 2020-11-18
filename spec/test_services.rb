@@ -12,6 +12,7 @@ module TestServices
                                                               reload_connections: true)
   end
 
+  # TODO: rename - only collections
   def create_es_indexes
     collections_index_name = [Rails.env, I14y::APP_NAME, 'collections', 'v1'].join('-')
     collection_repository = CollectionRepository.new(index_name: collections_index_name)
