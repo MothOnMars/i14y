@@ -27,6 +27,7 @@ describe DocumentSearch do
   end
   let(:document_repository) do
     #FIXME
+    #TODO: search without repository
     es_documents_index_name = [DocumentRepository.index_namespace('agency_blogs'), 'v1'].join('-')
     #Using a single shard prevents intermittent relevancy issues in tests
     #https://www.elastic.co/guide/en/elasticsearch/guide/current/relevance-is-broken.html
@@ -35,7 +36,7 @@ describe DocumentSearch do
 
 
   before do
-    TestServices::create_documents_index
+    TestServices::create_documents_index('agency_blogs')
 #    es_documents_index_name = [DocumentRepository.index_namespace('agency_blogs'), 'v1'].join('-')
     #FIXME: delete by query
     #Using a single shard prevents intermittent relevancy issues in tests

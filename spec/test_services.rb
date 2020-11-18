@@ -24,14 +24,14 @@ module TestServices
    # Elasticsearch::Persistence.client.indices.put_alias index: es_collections_index_name, name: Collection.index_name
   end
 
-  def create_documents_index
-    es_documents_index_name = [DocumentRepository.index_namespace('agency_blogs'), 'v1'].join('-')
+  def create_documents_index(handle)
+    es_documents_index_name = [DocumentRepository.index_namespace(handle), 'v1'].join('-')
     #Using a single shard prevents intermittent relevancy issues in tests
     #https://www.elastic.co/guide/en/elasticsearch/guide/current/relevance-is-broken.html
     document_repository =  DocumentRepository.new(settings: { index: { number_of_shards: 1 } }, index_name: es_documents_index_name)
     document_repository.create_index!#(index_name: es_documents_index_name)
     DEFAULT_CLIENT.indices.put_alias index: es_documents_index_name,
-                                                        name: DocumentRepository.index_namespace('agency_blogs')
+                                                        name: DocumentRepository.index_namespace(handle)
 
   end
 
