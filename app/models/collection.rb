@@ -8,8 +8,7 @@ class Collection
   include ActiveModel::Validations
   include Virtus.model
 
-  extend ActiveModel::Callbacks
-
+  #TODO: check # of shards in production
   #FIXME - remove mapping?
   attribute :id, String, mapping: { type: 'keyword' }
   attribute :token, String, mapping: { type: 'keyword' }
