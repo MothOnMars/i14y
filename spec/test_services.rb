@@ -24,8 +24,42 @@ module TestServices
    # Elasticsearch::Persistence.client.indices.put_alias index: es_collections_index_name, name: Collection.index_name
   end
 
+  def create_documents_index
+    es_documents_index_name = [DocumentRepository.index_namespace('agency_blogs'), 'v1'].join('-')
+    #Using a single shard prevents intermittent relevancy issues in tests
+    #https://www.elastic.co/guide/en/elasticsearch/guide/current/relevance-is-broken.html
+    document_repository =  DocumentRepository.new(settings: { index: { number_of_shards: 1 } }, index_name: es_documents_index_name)
+    document_repository.create_index!#(index_name: es_documents_index_name)
+    DEFAULT_CLIENT.indices.put_alias index: es_documents_index_name,
+                                                        name: DocumentRepository.index_namespace('agency_blogs')
+
+  end
+
   def delete_es_indexes
     #Elasticsearch::Persistence.client.indices.delete(index: [Rails.env, I14y::APP_NAME, '*'].join('-'))
     DEFAULT_CLIENT.indices.delete(index: [Rails.env, I14y::APP_NAME, '*'].join('-'))
   end
 end
+
+=begin
+  let(:document_repository) do
+    #FIXME
+    es_documents_index_name = [DocumentRepository.index_namespace('agency_blogs'), 'v1'].join('-')
+    #Using a single shard prevents intermittent relevancy issues in tests
+    #https://www.elastic.co/guide/en/elasticsearch/guide/current/relevance-is-broken.html
+    DocumentRepository.new(settings: { index: { number_of_shards: 1 } }, index_name: es_documents_index_name)
+  end
+
+
+  before do
+    es_documents_index_name = [DocumentRepository.index_namespace('agency_blogs'), 'v1'].join('-')
+    #FIXME: delete by query
+    #Using a single shard prevents intermittent relevancy issues in tests
+    #https://www.elastic.co/guide/en/elasticsearch/guide/current/relevance-is-broken.html
+    #DocumentRepository.settings(index: { number_of_shards: 1 })
+    document_repository.create_index!#(index_name: es_documents_index_name)
+    client.indices.put_alias index: es_documents_index_name,
+                                                        name: DocumentRepository.index_namespace('agency_blogs')
+    #Document.index_name = Document.index_namespace('agency_blogs')
+  end
+=end

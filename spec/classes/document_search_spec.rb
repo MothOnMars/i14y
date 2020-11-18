@@ -35,14 +35,15 @@ describe DocumentSearch do
 
 
   before do
-    es_documents_index_name = [DocumentRepository.index_namespace('agency_blogs'), 'v1'].join('-')
+    TestServices::create_documents_index
+#    es_documents_index_name = [DocumentRepository.index_namespace('agency_blogs'), 'v1'].join('-')
     #FIXME: delete by query
     #Using a single shard prevents intermittent relevancy issues in tests
     #https://www.elastic.co/guide/en/elasticsearch/guide/current/relevance-is-broken.html
     #DocumentRepository.settings(index: { number_of_shards: 1 })
-    document_repository.create_index!#(index_name: es_documents_index_name)
-    client.indices.put_alias index: es_documents_index_name,
-                                                        name: DocumentRepository.index_namespace('agency_blogs')
+#    document_repository.create_index!#(index_name: es_documents_index_name)
+#    client.indices.put_alias index: es_documents_index_name,
+#                                                        name: DocumentRepository.index_namespace('agency_blogs')
     #Document.index_name = Document.index_namespace('agency_blogs')
   end
 
