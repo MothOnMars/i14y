@@ -61,7 +61,9 @@ module API
           handle = params.delete(:handle)
           error!(collection.errors.messages, 400) unless CollectionRepository.new.delete(handle)
           #todo: add spec for deleting multiple index versions
-          DEFAULT_CLIENT.indices.delete(index: [DocumentRepository.index_namespace(handle), '*'].join('-'))
+          DEFAULT_CLIENT.indices.delete(
+            index: [DocumentRepository.index_namespace(handle), '*'].join('-')
+          )
           ok("Your collection was successfully deleted.")
         end
 
@@ -120,7 +122,6 @@ module API
         end
         get :search do
           handles = params.delete(:handles).split(',')
-          #valid_collections = CollectionRepository.new.find(handles).compact
           valid_collections = CollectionRepository.new.find(handles).compact
           error!("Could not find all the specified collection handles", 400) unless valid_collections.size == handles.size
           %i(tags ignore_tags include).each { |key| params[key] = params[key].extract_array if params[key].present? }

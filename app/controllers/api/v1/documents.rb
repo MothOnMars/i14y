@@ -26,9 +26,10 @@ module API
           { status: 200, developer_message: "OK", user_message: user_message }
         end
 
-        def auth?(handle, token)
-          CollectionRepository.new.find(handle).token == token
-        rescue Elasticsearch::Persistence::Repository::DocumentNotFound, Elasticsearch::Transport::Transport::Errors::BadRequest
+        def auth?(collection_handle, token)
+          CollectionRepository.new.find(collection_handle).token == token
+        rescue Elasticsearch::Persistence::Repository::DocumentNotFound,
+          Elasticsearch::Transport::Transport::Errors::BadRequest
           false
         end
       end
