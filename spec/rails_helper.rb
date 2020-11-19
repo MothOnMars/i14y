@@ -67,3 +67,11 @@ RSpec.configure do |config|
     #DEFAULT_CLIENT.indices.delete index: '*documents*'
   end
 end
+
+#TODO: move this?
+Shoulda::Matchers.configure do |config|
+  config.integrate do |with|
+    with.test_framework :rspec
+    with.library :rails
+  end
+end

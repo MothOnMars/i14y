@@ -12,7 +12,7 @@ class Collection
   #FIXME - remove mapping?
   attribute :id, String, mapping: { type: 'keyword' }
   attribute :token, String, mapping: { type: 'keyword' }
-  #validates :token, presence: true
+  validates :token, presence: true
   #validate id?
     # see https://github.com/elastic/elasticsearch-rails/issues/544
   # TODO: add specs
