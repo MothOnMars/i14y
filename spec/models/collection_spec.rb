@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 require 'rails_helper'
 
 describe Collection do
@@ -14,10 +16,7 @@ describe Collection do
       it { is_expected.to be_valid }
     end
 
-    context '' do
-      
-    end
+   it { is_expected.to validate_presence_of(:token) }
   end
 
-  it { is_expected.to validate_presence_of(:token) }
 end

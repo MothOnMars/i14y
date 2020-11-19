@@ -12,10 +12,11 @@ class Collection
   #FIXME - remove mapping?
   attribute :id, String, mapping: { type: 'keyword' }
   attribute :token, String, mapping: { type: 'keyword' }
-  validates :token, presence: true
+  #validates :token, presence: true
   #validate id?
     # see https://github.com/elastic/elasticsearch-rails/issues/544
   # TODO: add specs
+  # maybe do this when serializing?
   attribute :created_at, Time, default: lambda { |o,a| Time.now.utc }
   attribute :updated_at, Time, default: lambda { |o,a| Time.now.utc }
 
@@ -31,7 +32,7 @@ class Collection
 
   private
 
-  def document_repository
+  def document_repository #DELEGATE METHODS?
     @document_repository ||= DocumentRepository.new(index_name: DocumentRepository.index_namespace(self.id))
   end
 end
