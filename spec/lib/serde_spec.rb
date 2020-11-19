@@ -21,7 +21,7 @@ describe Serde do
     end
 
     it 'stores the language fields with the language suffix' do
-      expect(serialize_hash).to eq(
+      expect(serialize_hash).to include(
         { "path" => "http://www.foo.gov/bar.html",
           "promote" => false,
           "tags" => ["this that"],
@@ -36,6 +36,10 @@ describe Serde do
           "domain_name" => "www.foo.gov"
         }
       )
+    end
+
+    it 'populates the timestamp fields' do
+      expect(serialize_hash[:created_at]).to be_an_instance_of(Time) #or DateTime?
     end
   end
 

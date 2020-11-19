@@ -20,6 +20,7 @@ describe API::V1::Collections do
     DEFAULT_CLIENT
 
   end
+  #FIXME: use ES transport methods
   let(:collection_repository) do
     CollectionRepository.new(index_name: [Rails.env, I14y::APP_NAME, 'collections', 'v1'].join('-'))
   end
@@ -177,17 +178,20 @@ describe API::V1::Collections do
         #client.delete_by_query index: Document.index_name, q: '*:*', conflicts: 'proceed'
         
         #FIXME: all this namespaced index stuff...
+        # ...and get rid of dependencies on classes
         client.delete_by_query index: DocumentRepository.index_namespace('agency_blogs'), q: '*:*', conflicts: 'proceed'
 #        Document.create(hash1)
 #        Document.create(hash2)
         document_repository.save(Document.new(hash1))
         document_repository.save(Document.new(hash2))
         document_repository.refresh_index!
+        binding.pry
         get_collection
       end
 
       let(:datetime) { DateTime.now.utc }
       let(:hash1) do
+        #TODO: find & replace all the _id's
         {
           _id: 'a1',
           language: 'en',

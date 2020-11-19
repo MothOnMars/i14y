@@ -27,6 +27,7 @@ class Collection
 
   def last_document_sent
     #FIXME: need spec for the rescue condition
+    #FIXME: dr.search(size:1, sort: "_id") - simplify
     document_repository.search("*:*", {size:1, sort: "updated_at:desc"}).results.first.updated_at.utc.to_s #rescue nil
   end
 

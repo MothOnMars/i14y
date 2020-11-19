@@ -12,9 +12,9 @@ module Serde
       end
     end
     hash.merge!(uri_params_hash(hash[:path])) if hash[:path].present?
-    #FIXME 
+    #FIXME needs spec
     hash[:changed] = hash[:changed].presence || hash[:created]
-    #will this explode if save is called twice?
+    hash[:created_at] ||= Time.now
     hash[:tags] = hash[:tags].extract_array if hash[:tags].present?
     hash
   end

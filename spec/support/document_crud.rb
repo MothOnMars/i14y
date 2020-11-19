@@ -9,6 +9,10 @@ module DocumentCrud
     document_repository.refresh_index!
   end
 
+  def create_document(handle, document)
+
+  end
+
   def api_post(params,session)
     post "/api/v1/documents", params: params, headers: session
     document_repository.refresh_index!
