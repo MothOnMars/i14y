@@ -33,6 +33,6 @@ class Collection
   private
 
   def document_repository #DELEGATE METHODS?
-    @document_repository ||= DocumentRepository.new(index_name: DocumentRepository.index_namespace(self.id))
+    @document_repository ||= DocumentRepository.new(index_name: DocumentRepository.index_namespace(id))
   end
 end
