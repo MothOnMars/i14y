@@ -13,5 +13,11 @@ describe Collection do
     context 'with valid parameters' do
       it { is_expected.to be_valid }
     end
+
+    context '' do
+      
+    end
   end
+
+  it { is_expected.to validate_presence_of(:token) }
 end
