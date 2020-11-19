@@ -25,20 +25,17 @@ module TestServices
   end
 
   def create_documents_index(handle)
-    #TODO: get all this DocRepos code out of here
-    es_documents_index_name = [DocumentRepository.index_namespace(handle), 'v1'].join('-')
+    index_name = [Rails.env, I14y::APP_NAME, 'documents', handle, 'v1'].join('-')
     #Using a single shard prevents intermittent relevancy issues in tests
     #https://www.elastic.co/guide/en/elasticsearch/guide/current/relevance-is-broken.html
-    document_repository =  DocumentRepository.new(settings: { index: { number_of_shards: 1 } }, index_name: es_documents_index_name)
-    #document_repository.create_index!#(index_name: es_documents_index_name)
     #FIXME rescue nil - only create index once
-#    puts "shards: #{DEFAULT_CLIENT.indices.get_settings(index: es_documents_index_name)["number_of_shards"].to_s}"
     #TODO: ensure the ag blogs index isn't left behind after collections api spec
-    DEFAULT_CLIENT.indices.delete(index: es_documents_index_name) if DEFAULT_CLIENT.indices.exists?(index: es_documents_index_name)
-    DEFAULT_CLIENT.indices.create(index: es_documents_index_name, body: { settings: { number_of_shards: 1 } }) unless DEFAULT_CLIENT.indices.exists?(index: "test-i14y-documents-#{handle}-v1")
-    DEFAULT_CLIENT.indices.put_alias index: es_documents_index_name,
-                                                        name: DocumentRepository.index_namespace(handle)
-
+    DEFAULT_CLIENT.indices.delete(index: index_name) if DEFAULT_CLIENT.indices.exists?(index: index_name)
+    DEFAULT_CLIENT.indices.create(index: index_name, body: { settings: { number_of_shards: 1 } }) unless DEFAULT_CLIENT.indices.exists?(index: "test-i14y-documents-#{handle}-v1")
+    DEFAULT_CLIENT.indices.put_alias(
+      index: index_name,
+      name: index_name.remove('-v1')
+    )
   end
 
   def delete_es_indexes
