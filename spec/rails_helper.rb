@@ -39,7 +39,7 @@ RSpec.configure do |config|
 
   config.before do
     # FIXME: we should also be able to purge collections, but that causes intermittent failures
-    # rspec ./spec/ --seed 29014 --fail-fast
+    # DO THIS AFTER, NOT BEFORE?
     DEFAULT_CLIENT.delete_by_query index: 'test-i14y-documents*', q: '*:*', conflicts: 'proceed'
   end
 
