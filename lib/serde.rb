@@ -16,9 +16,10 @@ module Serde
     hash[:changed] = hash[:changed].presence || hash[:created]
     #TODO: fetch these values, not via symbol
     #make sure nothing goes wrong if the full doc isn't involved...
+    # used .peristed?
     hash[:created_at] ||= Time.now
     #TODO: figure out what to do for updated_at
-    #hash[:updated_at] = Time.now
+    hash[:updated_at] = Time.now
     hash[:tags] = hash[:tags].extract_array if hash[:tags].present?
     hash
   end
