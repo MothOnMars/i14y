@@ -22,6 +22,10 @@ module TestServices
     )
   end
 
+  def collections_index_name
+    [Rails.env, I14y::APP_NAME, 'collections', 'v1'].join('-')
+  end
+
   def create_documents_index(handle)
     index_name = [Rails.env, I14y::APP_NAME, 'documents', handle, 'v1'].join('-')
     #Using a single shard prevents intermittent relevancy issues in tests
@@ -34,6 +38,19 @@ module TestServices
       index: index_name,
       name: index_name.remove('-v1')
     )
+  end
+
+  def create_collection(handle: 'agency_blogs', token: 'secret')
+    DEFAULT_CLIENT.index(index: collections_index_name,
+                         body: { handle: handle, token: token },
+                         type: '_doc')
+  end
+
+  def rollback_index_changes
+    index_pattern = [Rails.env, I14y::APP_NAME, '*'].join('-')
+    DEFAULT_CLIENT.delete_by_query(index: index_pattern, q: '*:*', conflicts: 'proceed')
+    #need to refresh?
+    #log?
   end
 
   def delete_es_indexes
