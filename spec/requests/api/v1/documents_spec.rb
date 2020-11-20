@@ -250,6 +250,13 @@ describe API::V1::Documents, elasticsearch: true do
   end
 
   describe 'PUT /api/v1/documents/{document_id}' do
+    let(:put_document) do
+      put "/api/v1/documents/#{URI.encode(id)}",
+        params: update_params,
+        headers: valid_session
+      document_repository.refresh_index!
+    end
+
     let(:update_params) do
       {
         title:       'new title',
@@ -273,10 +280,12 @@ describe API::V1::Documents, elasticsearch: true do
                         created:     2.hours.ago,
                         updated:     Time.now,
                         promote:     true,
-                        path:        'http://www.gov.gov/url4.html')
+                        path:        'http://www.gov.gov/url4.html',
+                        created_at:  '2020-01-01T10:00:01Z',
+                        updated_at:  '2020-01-01T10:00:01Z'
+                       )
 
-        puts 'updating doc via api'
-        api_put "/api/v1/documents/#{URI.encode(id)}", update_params, valid_session
+        put_document
       end
 
       it 'returns success message as JSON' do
@@ -297,6 +306,7 @@ describe API::V1::Documents, elasticsearch: true do
         expect(document.tags).to match_array(['new category'])
         expect(document.changed).to eq('2016-01-01T10:00:01Z')
         expect(document.click_count).to eq(1000)
+        expect(document.updated_at).to be_within(1.second).of(Time.now)
       end
 
       it_behaves_like 'a data modifying request made during read-only mode'
