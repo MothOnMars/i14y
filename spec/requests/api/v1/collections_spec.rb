@@ -168,6 +168,7 @@ describe API::V1::Collections do
       get '/api/v1/collections/agency_blogs', headers: valid_session
     end
 
+    #FIXME: rspec spec/ --seed 39143
     context 'success case' do
       before do
         #FIXME: DRY UP
@@ -185,7 +186,6 @@ describe API::V1::Collections do
         document_repository.save(Document.new(hash1))
         document_repository.save(Document.new(hash2))
         document_repository.refresh_index!
-        binding.pry
         get_collection
       end
 

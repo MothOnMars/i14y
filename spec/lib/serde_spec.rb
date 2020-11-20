@@ -39,7 +39,13 @@ describe Serde do
     end
 
     it 'populates the timestamp fields' do
+      #expect([1, 3, 5]).to all( be_an(Integer) )
       expect(serialize_hash[:created_at]).to be_an_instance_of(Time) #or DateTime?
+      #expect(serialize_hash[:updated_at]).to be_an_instance_of(Time) #or DateTime?
+    end
+
+    context 'when the timestamp fields were populated previously' do
+      #let(:original
     end
   end
 

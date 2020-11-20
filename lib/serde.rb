@@ -4,7 +4,7 @@ module Serde
   #TODO: make language required?
   def self.serialize_hash(hash, language, language_field_keys)
     language_field_keys.each do |key|
-      value = hash[key.to_sym]
+      value = hash[key.to_sym] #TODO - use fetch
       if value.present?
         sanitized_value = Loofah.fragment(value).text(encode_special_chars: false).squish
         hash.store("#{key}_#{language}", sanitized_value)
@@ -14,7 +14,11 @@ module Serde
     hash.merge!(uri_params_hash(hash[:path])) if hash[:path].present?
     #FIXME needs spec
     hash[:changed] = hash[:changed].presence || hash[:created]
+    #TODO: fetch these values, not via symbol
+    #make sure nothing goes wrong if the full doc isn't involved...
     hash[:created_at] ||= Time.now
+    #TODO: figure out what to do for updated_at
+    #hash[:updated_at] = Time.now
     hash[:tags] = hash[:tags].extract_array if hash[:tags].present?
     hash
   end
