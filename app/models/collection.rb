@@ -17,7 +17,7 @@ class Collection
   # TODO: add specs
   # maybe do this when serializing?
   attribute :created_at, Time, default: lambda { |o,a| Time.now.utc }
-  attribute :updated_at, Time
+  attribute :updated_at, Time, default: lambda { |o,a| Time.now.utc }
 
   #NEED UNIT SPECS
   def document_total
