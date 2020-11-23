@@ -8,17 +8,16 @@ class Collection
   include ActiveModel::Validations
   include Virtus.model
 
-  #TODO: check # of shards in production
-  #FIXME - remove mapping?
-  attribute :id, String, mapping: { type: 'keyword' }
-  attribute :token, String, mapping: { type: 'keyword' }
+  attribute :id
+  attribute :token
+
+  validates :id, presence: true
   validates :token, presence: true
-  #validate id?
     # see https://github.com/elastic/elasticsearch-rails/issues/544
   # TODO: add specs
   # maybe do this when serializing?
   attribute :created_at, Time, default: lambda { |o,a| Time.now.utc }
-  attribute :updated_at, Time, default: lambda { |o,a| Time.now.utc }
+  attribute :updated_at, Time
 
   #NEED UNIT SPECS
   def document_total
