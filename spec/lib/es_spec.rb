@@ -16,6 +16,8 @@ describe ES do
   end
 
   describe '.collection_repository' do
-    
+    subject(:collection_repository) { ES.collection_repository }
+
+    it { is_expected.to be_a CollectionRepository }
   end
 end
