@@ -16,7 +16,7 @@ class Collection
     # see https://github.com/elastic/elasticsearch-rails/issues/544
   # TODO: add specs
   # maybe do this when serializing?
-  attribute :created_at, Time, default: lambda { |o,a| Time.now.utc }
+  attribute :created_at, Time #, default: lambda { |o,a| Time.now.utc }
   attribute :updated_at, Time, default: lambda { |o,a| Time.now.utc }
 
   #NEED UNIT SPECS

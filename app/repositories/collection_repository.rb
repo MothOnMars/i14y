@@ -7,6 +7,11 @@ class CollectionRepository
   extend NamespacedIndex
 
   klass Collection
-  client DEFAULT_CLIENT
+  client ES.client
   index_name index_namespace
+
+  def serialize(collection)
+    collection.created_at = collection.created_at || Time.now.utc
+    collection
+  end
 end
