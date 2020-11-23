@@ -17,7 +17,7 @@ describe Collection do
     end
 
     it { is_expected.to validate_presence_of(:token) }
-    #?it { is_expected.to validate_presence_of(:id) }
+    it { is_expected.to validate_presence_of(:id) }
   end
 
 end
