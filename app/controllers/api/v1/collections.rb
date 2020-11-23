@@ -49,7 +49,7 @@ module API
           error!(collection.errors.messages, 400) unless collection.valid?
           es_documents_index_name = [DocumentRepository.index_namespace(handle), 'v1'].join('-')
           DocumentRepository.new.create_index!(index: es_documents_index_name)
-          collection_repository = CollectionRepository.new.save(collection) #TODO: initialize CR once
+          collection_repository = ES.collection_repository.save(collection) #TODO: initialize CR once
           DEFAULT_CLIENT.indices.put_alias(index: es_documents_index_name,
                                            name: DocumentRepository.index_namespace(handle))
           ok("Your collection was successfully created.")
@@ -59,7 +59,7 @@ module API
         delete ':handle' do
           check_updates_allowed
           handle = params.delete(:handle)
-          error!(collection.errors.messages, 400) unless CollectionRepository.new.delete(handle)
+          error!(collection.errors.messages, 400) unless ES.collection_repository.delete(handle)
           #todo: add spec for deleting multiple index versions
           DEFAULT_CLIENT.indices.delete(
             index: [DocumentRepository.index_namespace(handle), '*'].join('-')
@@ -122,7 +122,7 @@ module API
         end
         get :search do
           handles = params.delete(:handles).split(',')
-          valid_collections = CollectionRepository.new.find(handles).compact
+          valid_collections = ES.collection_repository.find(handles).compact
           error!("Could not find all the specified collection handles", 400) unless valid_collections.size == handles.size
           %i(tags ignore_tags include).each { |key| params[key] = params[key].extract_array if params[key].present? }
           document_search = DocumentSearch.new(params.merge(handles: valid_collections.collect(&:id)))
@@ -136,7 +136,7 @@ module API
         get ':handle' do
           #this is broken 'cuz updated_at is missing
           handle = params.delete(:handle)
-          collection = CollectionRepository.new.find(handle)
+          collection = ES.collection_repository.find(handle)
           { status: 200, developer_message: "OK" }.merge(collection.as_json(root: true, methods: [:document_total, :last_document_sent]))
         end
       end
