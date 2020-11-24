@@ -212,6 +212,8 @@ describe API::V1::Collections do
         }
       end
 
+      #FIXME:
+      #rspec spec/ --seed 61711 --fail-fast
       it 'is successful' do
         expect(response.status).to eq(200)
       end
