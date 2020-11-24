@@ -28,5 +28,18 @@ describe CollectionRepository do
         expect(serialized_collection[:updated_at]).to be_a(Time)
       end
     end
+
+    context 'when the collection is pre-existing' do
+      let(:collection) do
+        Collection.new(
+          id: 'foo',
+          token: 'bar',
+          created_at: '2020-11-23 19:59:55 UTC',
+          updated_at: '2020-11-23 19:59:55 UTC'
+        )
+      end
+
+      xit 'updates updated_at'
+    end
   end
 end
