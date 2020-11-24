@@ -216,7 +216,7 @@ describe API::V1::Collections do
         expect(response.status).to eq(200)
       end
 
-      it 'returns success message with Collection stats as JSON' do
+      xit 'returns success message with Collection stats as JSON' do
         expect(JSON.parse(response.body)).to match(
           hash_including('status' => 200,
                          'developer_message' => 'OK',

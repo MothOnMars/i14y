@@ -33,6 +33,7 @@ RSpec.configure do |config|
 
   config.before(:suite) do
     require 'test_services'
+    #abort('Unable to connect to Elasticsearch') unless ES.client.ping
     TestServices::delete_es_indexes
     TestServices::create_es_indexes
   end

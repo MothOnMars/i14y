@@ -11,7 +11,9 @@ class CollectionRepository
   index_name index_namespace
 
   def serialize(collection)
-    collection.created_at = collection.created_at || Time.now.utc
-    collection
+    #collection.created_at = collection.created_at || Time.now.utc
+   # collection
+  #  binding.pry
+    super
   end
 end
