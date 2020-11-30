@@ -3,6 +3,7 @@ ENV["RAILS_ENV"] ||= 'test'
 require 'spec_helper'
 require File.expand_path("../../config/environment", __FILE__)
 require 'rspec/rails'
+require 'test_services'
 
 # Requires supporting ruby files with custom matchers and macros, etc, in
 # spec/support/ and its subdirectories. Files matching `spec/**/*_spec.rb` are
@@ -28,11 +29,11 @@ RSpec.configure do |config|
   # The different available types are documented in the features, such as in
   # https://relishapp.com/rspec/rspec-rails/docs
   config.include DocumentCrud
+  config.include TestServices
 
   config.infer_spec_type_from_file_location!
 
   config.before(:suite) do
-    require 'test_services'
     TestServices::delete_es_indexes
     TestServices::create_es_indexes
   end
@@ -54,6 +55,6 @@ RSpec.configure do |config|
   end
 
   config.after :each, elasticsearch: true do
-    Elasticsearch::Persistence.client.indices.delete index: '*documents*'
+    ES.client.indices.delete index: '*documents*'
   end
 end
