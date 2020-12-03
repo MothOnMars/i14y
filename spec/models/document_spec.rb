@@ -7,8 +7,8 @@ describe Document do
       language: 'en',
       path: 'http://www.agency.gov/page1.html',
       title: 'My Title',
-      created: DateTime.now,
-      changed: DateTime.now,
+      created: DateTime.new(2020, 1, 1),
+      changed: DateTime.new(2020, 1, 2),
       description: 'My Description',
       content: 'some content',
       promote: true,
@@ -34,6 +34,25 @@ describe Document do
     ES.client.indices.delete(
       index: [Document.index_namespace('test_index'), '*'].join('-')
     )
+  end
+
+  describe 'attributes' do
+    subject(:document) { Document.new(valid_params) }
+
+    it do
+      is_expected.to have_attributes(
+        _id: 'a123',
+        language: 'en',
+        path: 'http://www.agency.gov/page1.html',
+        title: 'My Title',
+        created: DateTime.new(2020, 1, 1),
+        changed: DateTime.new(2020, 1, 2),
+        description: 'My Description',
+        content: 'some content',
+        promote: true,
+        tags: 'this,that'
+      )
+    end
   end
 
   describe 'validations' do
