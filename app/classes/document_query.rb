@@ -232,6 +232,7 @@ class DocumentQuery
                     end
                   end
                 end
+                minimum_should_match 1 if doc_query.included_sites.any?
 
                 doc_query.tags.each { |tag| must { term tags: tag } } if doc_query.tags.present?
 
