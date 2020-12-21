@@ -21,8 +21,8 @@ class Documents
           tokenizer(json)
         end
       end
-      json.mappings do
-        json.document do
+      json.template do
+        json.mappings do
           dynamic_templates(json)
           properties(json)
         end
