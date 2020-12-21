@@ -6,10 +6,8 @@ class Collections
   def body
     Jbuilder.encode do |json|
       json.index_patterns "*-#{I14y::APP_NAME}-collections-*"
-      json.template do
-        json.mappings do
-          dynamic_templates(json)
-        end
+      json.mappings do
+        dynamic_templates(json)
       end
     end
   end
