@@ -17,10 +17,15 @@ jobs:
   build:
     environment:
       RUBY_VERSION: << parameters.ruby_version >>
-    executor: test_executor
     parameters:
       ruby_version:
         type: string
+      elasticsearch_version:
+        type: string
+    executor:
+      name: test_executor
+      ruby_version:  << parameters.ruby_version >>
+      elasticsearch_version:  << parameters.elasticsearch_version >>
     steps:
       - checkout
       - run: cp -p config/secrets_example.yml config/secrets.yml
