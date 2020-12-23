@@ -81,3 +81,6 @@ workflows:
                 - 2.5.5
                 - 2.6.3
                 - 2.7.0
+              elasticsearch_version:
+                - 6.8.13
+                - 7.9.10
