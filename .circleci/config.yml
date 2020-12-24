@@ -3,9 +3,9 @@ version: 2.1
 executors:
   test_executor:
     parameters:
-      ruby-version:
+      ruby_version:
         type: string
-      elasticsearch-version:
+      elasticsearch_version:
         type: string
     docker:
       - image: circleci/ruby:${RUBY_VERSION}-node-browsers
