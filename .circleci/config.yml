@@ -9,9 +9,8 @@ executors:
         type: string
     docker:
       - image: circleci/ruby:<< parameters.ruby_version >>-node-browsers
+      - image: docker.elastic.co/elasticsearch/elasticsearch:<< parameters.elasticsearch_version >>
     working_directory: ~/app
-    environment:
-      ES_VER: 7.9.1
 
 jobs:
   build:
@@ -29,29 +28,6 @@ jobs:
     steps:
       - checkout
       - run: cp -p config/secrets_example.yml config/secrets.yml
-      - restore_cache:
-          key: elasticsearch-6.8.6-0
-      - run:
-          name: Installing Elasticsearch
-          command: |
-            if [ ! -d ~/elasticsearch-$ES_VER ]; then
-              curl -L -O https://artifacts.elastic.co/downloads/elasticsearch/elasticsearch-$ES_VER.tar.gz
-              tar -xvf elasticsearch-$ES_VER.tar.gz -C ~/
-              PLUGINS=(
-                "analysis-icu"
-                "analysis-kuromoji"
-                "analysis-smartcn"
-              )
-              for plugin in ${PLUGINS[*]}; do ~/elasticsearch-$ES_VER/bin/elasticsearch-plugin install $plugin; done
-            fi
-      - save_cache:
-          key: elasticsearch-6.8.6-0
-          paths:
-            - ~/elasticsearch-6.8.6
-      - run:
-          name: Run Elasticsearch in background
-          command: ~/elasticsearch-$ES_VER/bin/elasticsearch -E http.port=9268
-          background: true
       - restore_cache:
            key: bundle-{{ checksum "Gemfile.lock" }}
       - run: gem install bundler:1.17.3
