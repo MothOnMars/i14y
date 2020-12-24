@@ -67,8 +67,8 @@ workflows:
             parameters:
               ruby_version:
                 - 2.5.5
-                - 2.6.3
-                - 2.7.0
+                - 2.6.6
+                - 2.7.2
               elasticsearch_version:
                 - 6.8.13
                 - 7.10.1

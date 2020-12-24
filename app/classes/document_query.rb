@@ -224,7 +224,7 @@ class DocumentQuery
               bool do
                 must { term language: doc_query.language } if doc_query.language.present?
 
-             #   minimum_should_match 1 if doc_query.included_sites.any?
+                minimum_should_match 1 if doc_query.included_sites.any?
 
                 doc_query.included_sites.each do |site_filter|
                   should do
