@@ -16,12 +16,11 @@ module Templatable
     json.child! do
       json.string_fields do
         json.mapping do
-          #json.type type
+          json.type type
           json.index true
         end
-        #https://techoverflow.net/2019/04/17/how-to-fix-elasticsearch-root-mapping-definition-has-unsupported-parameters/
-        #json.match_mapping_type "string"
-        #json.match "*"
+        json.match_mapping_type "string"
+        json.match "*"
       end
     end
   end
