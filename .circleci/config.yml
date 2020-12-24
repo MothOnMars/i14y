@@ -15,13 +15,13 @@ executors:
 
 jobs:
   build:
-    environment:
-      RUBY_VERSION: << parameters.ruby_version >>
     parameters:
       ruby_version:
         type: string
       elasticsearch_version:
         type: string
+    environment:
+      RUBY_VERSION: << parameters.ruby_version >>
     executor:
       name: test_executor
       ruby_version:  << parameters.ruby_version >>
