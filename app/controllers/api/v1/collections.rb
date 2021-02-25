@@ -45,18 +45,12 @@ module API
         post do
           check_updates_allowed
           handle = params[:handle]
-          collection = Collection.new(id: handle, token: params[:token])
+          collection = Collection.create(_id: handle, token: params[:token])
           error!(collection.errors.messages, 400) unless collection.valid?
-          ES.collection_repository.save(collection)
-          documents_index_name = [DocumentRepository.index_namespace(handle), 'v1'].join('-')
-          DocumentRepository.new.create_index!(
-            index: documents_index_name,
-            include_type_name: true
-          )
-          ES.client.indices.put_alias(
-            index: documents_index_name,
-            name: DocumentRepository.index_namespace(handle)
-          )
+          es_documents_index_name = [Document.index_namespace(handle), 'v1'].join('-')
+          Document.create_index!(index: es_documents_index_name)
+          Elasticsearch::Persistence.client.indices.put_alias index: es_documents_index_name,
+                                                              name: Document.index_namespace(handle)
           ok("Your collection was successfully created.")
         end
 
@@ -64,11 +58,9 @@ module API
         delete ':handle' do
           check_updates_allowed
           handle = params.delete(:handle)
-          collection = ES.collection_repository.find(handle)
-          error!(collection.errors.messages, 400) unless ES.collection_repository.delete(handle)
-          ES.client.indices.delete(
-            index: [DocumentRepository.index_namespace(handle), '*'].join('-')
-          )
+          collection = Collection.find(handle)
+          error!(collection.errors.messages, 400) unless collection.destroy
+          Elasticsearch::Persistence.client.indices.delete(index: [Document.index_namespace(handle), '*'].join('-'))
           ok("Your collection was successfully deleted.")
         end
 
@@ -127,7 +119,7 @@ module API
         end
         get :search do
           handles = params.delete(:handles).split(',')
-          valid_collections = ES.collection_repository.find(handles).compact
+          valid_collections = Collection.find(handles).compact
           error!("Could not find all the specified collection handles", 400) unless valid_collections.size == handles.size
           %i(tags ignore_tags include).each { |key| params[key] = params[key].extract_array if params[key].present? }
           document_search = DocumentSearch.new(params.merge(handles: valid_collections.collect(&:id)))
@@ -139,7 +131,7 @@ module API
         desc "Get collection info and stats"
         get ':handle' do
           handle = params.delete(:handle)
-          collection = ES.collection_repository.find(handle)
+          collection = Collection.find(handle)
           { status: 200, developer_message: "OK" }.merge(collection.as_json(root: true, methods: [:document_total, :last_document_sent]))
         end
       end

@@ -1,5 +1,3 @@
-# frozen_string_literal: true
-
 require 'rails_helper'
 
 describe Collection do
@@ -9,7 +7,7 @@ describe Collection do
   let(:token) { 'secret' }
   let(:collection_params) do
     {
-      id: id,
+      _id: id,
       token: token
     }
   end
@@ -19,28 +17,13 @@ describe Collection do
   describe 'attributes' do
     it do
       is_expected.to have_attributes(
-        id: 'agency_blogs',
         token: 'secret',
-        created_at: an_instance_of(Time),
-        updated_at: an_instance_of(Time)
+        id: 'agency_blogs'
       )
     end
   end
 
   describe 'validations' do
     it { is_expected.to validate_presence_of(:token) }
-  end
-
-  describe '#last_document_sent' do
-    subject(:last_document_sent) { collection.last_document_sent }
-
-    context 'when something goes wrong' do
-      before do
-        allow_any_instance_of(DocumentRepository).
-          to receive(:search).and_raise(StandardError)
-      end
-
-      it { is_expected.to be nil }
-    end
   end
 end

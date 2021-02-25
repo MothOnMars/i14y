@@ -27,14 +27,9 @@ module API
         end
 
         def auth?(collection_handle, token)
-          ES.collection_repository.find(collection_handle).token == token
+          Collection.find(collection_handle).token == token
         rescue Elasticsearch::Persistence::Repository::DocumentNotFound, Elasticsearch::Transport::Transport::Errors::BadRequest
           false
-        end
-
-        def document_repository
-          index_name = DocumentRepository.index_namespace(@collection_handle)
-          DocumentRepository.new(index_name: index_name)
         end
       end
 
@@ -94,10 +89,11 @@ module API
         end
 
         post do
+          Document.index_name = Document.index_namespace(@collection_handle)
           id = params.delete(:document_id)
-          document = Document.new(params.merge(id: id))
+          document = Document.new(params.merge(_id: id))
           error!(document.errors.messages, 400) unless document.valid?
-          document_repository.save(document, op_type: :create)
+          document.save(op_type: :create)
           ok("Your document was successfully created.")
         end
 
@@ -151,17 +147,18 @@ module API
             :changed, :promote, :language, :tags, :click_count
         end
         put ':document_id', requirements: { document_id: /.*/ } do
-          id = params.delete(:document_id)
-          document = document_repository.find(id, '_source': 'language')
-          params.merge!(id: id, language: document.language)
-          error!(document.errors.messages, 400) unless document_repository.update(params)
+          Document.index_name = Document.index_namespace(@collection_handle)
+          document = Document.find(params.delete(:document_id))
+          serialized_params = Serde.serialize_hash(params, document.language, Document::LANGUAGE_FIELDS)
+          error!(document.errors.messages, 400) unless document.update(serialized_params)
           ok("Your document was successfully updated.")
         end
 
         desc "Delete a document"
         delete ':document_id', requirements: { document_id: /.*/ } do
-          id = params[:document_id]
-          error!(document.errors.messages, 400) unless document_repository.delete(id)
+          Document.index_name = Document.index_namespace(@collection_handle)
+          document = Document.find(params.delete(:document_id))
+          error!(document.errors.messages, 400) unless document.destroy
           ok("Your document was successfully deleted.")
         end
       end

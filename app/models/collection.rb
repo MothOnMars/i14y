@@ -1,33 +1,21 @@
-# frozen_string_literal: true
-
 class Collection
-  include ActiveModel::Serializers::JSON
-  include ActiveModel::Validations
-  include Virtus.model
+  include Elasticsearch::Persistence::Model
+  extend NamespacedIndex
 
-  attribute :id, String
-  attribute :token, String
-  attribute :created_at, Time, default: proc { Time.now.utc }
-  attribute :updated_at, Time, default: proc { Time.now.utc }
+  settings index: { number_of_shards: 1 }
 
+  index_name index_namespace
+  attribute :token, String, mapping: { type: 'keyword' }
   validates :token, presence: true
 
   def document_total
-    document_repository.count
+    Document.index_name = Document.index_namespace(self.id)
+    Document.count
   end
 
   def last_document_sent
-    document_repository.search("*:*", {size:1, sort: "updated_at:desc"}).
-      results.first.updated_at.utc.to_s
-  rescue
-    nil
+    Document.index_name = Document.index_namespace(self.id)
+    Document.search("*:*", {size:1, sort: "updated_at:desc"}).results.first.updated_at.utc.to_s rescue nil
   end
 
-  private
-
-  def document_repository
-    @document_repository = DocumentRepository.new(
-      index_name: DocumentRepository.index_namespace(id)
-    )
-  end
 end

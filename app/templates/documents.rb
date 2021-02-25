@@ -22,8 +22,10 @@ class Documents
         end
       end
       json.mappings do
-        dynamic_templates(json)
-        properties(json)
+        json.document do
+          dynamic_templates(json)
+          properties(json)
+        end
       end
     end
   end
@@ -165,7 +167,7 @@ class Documents
 
   def properties(json)
     json.properties do
-      %w[updated created changed].each { |field| date(json, field) }
+      %w(updated created).each { |field| date(json, field) }
       %w(document_id extension language path tags).each { |field| keyword(json, field) }
       basename(json)
       url_path(json)
