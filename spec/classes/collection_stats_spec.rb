@@ -33,7 +33,7 @@ describe CollectionStats do
   before do
     # FIXME: do this more efficiently
     ES.client.indices.delete(index: index_name, ignore_unavailable: true)
-    document_repository.create_index!
+    document_repository.create_index!(include_type_name: true)
   end
 
   after do
