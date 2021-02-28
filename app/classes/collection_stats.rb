@@ -12,6 +12,10 @@ class CollectionStats
       index_name: DocumentRepository.index_namespace(collection.id)
     ).count
   end
+
+  def last_document_sent
+    
+  end
 end
 
 =begin

@@ -50,4 +50,12 @@ describe CollectionStats do
       end
     end
   end
+
+  describe '#last_document_sent' do
+    subject(:last_document_sent) { collection_stats.last_document_sent }
+
+    describe 'by default' do
+      it { is_expected.to be nil }
+    end
+  end
 end
