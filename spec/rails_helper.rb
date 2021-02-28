@@ -40,6 +40,10 @@ RSpec.configure do |config|
     TestServices::create_collections_index
   end
 
+  config.after do
+    clear_index('*documents*')
+  end
+
   config.after(:suite) do
     TestServices::delete_es_indexes
   end
