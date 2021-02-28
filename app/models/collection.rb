@@ -14,19 +14,16 @@ class Collection
 
   def document_total
     document_repository.count
-    #ES.client.count(index: document_repository.index_name)
   end
 
   def last_document_sent
-    puts document_repository.count
-
-    puts document_repository.search("*:*", {size:1, sort: "updated_at:asc"}).
-      results.first.attributes
-    document_repository.search("*:*", {size:1, sort: "updated_at:asc"}).
+    document_repository.search("*:*", {size:1, sort: "updated_at:desc"}).
       results.first.updated_at.utc.to_s
   rescue
     nil
   end
+
+  private
 
   def document_repository
     @document_repository = DocumentRepository.new(
@@ -34,25 +31,3 @@ class Collection
     )
   end
 end
-
-=begin
-  def document_total
-    ES.client.count(index: document_repository.index_name)
-  end
-
-  def last_document_sent
-    binding.pry
-    ES.client.search(
-      index: document_repository.index_name,
-      body: {
-        "size": 1,
-        "sort": {
-          "updated_at": "desc"
-        }
-      }
-    )['hits']['hits'].first['_source']['updated_at']
-  rescue
-    nil
-  end
-
-=end

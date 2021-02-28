@@ -60,6 +60,4 @@ RSpec.configure do |config|
     # a real object. This is generally recommended.
     mocks.verify_partial_doubles = true
   end
-
-  # run setup before spec run
 end

@@ -151,39 +151,39 @@ describe API::V1::Collections do
   end
 
   describe 'GET /api/v1/collections/{handle}' do
-    let(:datetime) { DateTime.now.utc }
-    let(:hash1) do
-      {
-        _id: 'a1',
-        language: 'en',
-        title: 'title 1 common content',
-        description: 'description 1 common content',
-        created: Time.now,
-        path: 'http://www.agency.gov/page1.html'
-      }
-    end
-    let(:hash2) do
-      {
-        _id: 'a2',
-        language: 'en',
-        title: 'title 2 common content',
-        description: 'description 2 common content',
-        created: Time.now,
-        path: 'http://www.agency.gov/page2.html'
-      }
-    end
-
     context 'success case' do
       before do
         clear_index(collections_index_name)
         post '/api/v1/collections', params: valid_params, headers: valid_session
         clear_index(documents_index_name)
-        document_repository.save(Document.new(hash1))
-        document_repository.save(Document.new(hash2))
-        document_repository.refresh_index!
+      end
+
+      let(:datetime) { DateTime.now.utc }
+      let(:hash1) do
+        {
+          _id: 'a1',
+          language: 'en',
+          title: 'title 1 common content',
+          description: 'description 1 common content',
+          created: Time.now,
+          path: 'http://www.agency.gov/page1.html'
+        }
+      end
+      let(:hash2) do
+        {
+          _id: 'a2',
+          language: 'en',
+          title: 'title 2 common content',
+          description: 'description 2 common content',
+          created: Time.now,
+          path: 'http://www.agency.gov/page2.html'
+        }
       end
 
       it 'returns success message with Collection stats as JSON' do
+        document_repository.save(Document.new(hash1))
+        document_repository.save(Document.new(hash2))
+        document_repository.refresh_index!
         get '/api/v1/collections/agency_blogs', headers: valid_session
         expect(response.status).to eq(200)
         expect(JSON.parse(response.body)).to match(
@@ -197,36 +197,7 @@ describe API::V1::Collections do
                                            'updated_at' => an_instance_of(String) })
         )
       end
-    end
 
-    # For backwards-compatibility with documents created in Elasticsearch 6
-    context 'when the documents were created with the "document" type' do
-      let(:document_repository) do
-        DocumentRepository.new(
-          document_type: 'document',
-          index_name: documents_index_name
-        )
-      end
-
-      before do
-        collection = Collection.new(id: 'agency_blogs', token: 'secret')
-        ES.collection_repository.save(collection)
-        document_repository.create_index!(include_type_name: true)
-        document_repository.save(Document.new(hash1))
-      end
-
-      it 'returns the collection stats' do
-        get '/api/v1/collections/agency_blogs', headers: valid_session
-        binding.pry
-        expect(JSON.parse(response.body)).to match(
-          hash_including(
-            'collection' => {
-              'document_total' => 1,
-              'last_document_sent' => an_instance_of(String)
-            }
-          )
-        )
-      end
     end
   end
 
