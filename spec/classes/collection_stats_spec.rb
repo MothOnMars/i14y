@@ -8,7 +8,28 @@ describe CollectionStats do
   let(:document_repository) { DocumentRepository.new(index_name: index_name) }
   let(:collection_stats) { CollectionStats.new(collection) }
 
+  shared_context 'when documents are associated with the collection' do
+    let(:document1_params) do
+      {
+        path: 'https://agency.gov/1.html',
+        language: 'en'
+      }
+    end
+    let(:document2_params) do
+      {
+        path: 'https://agency.gov/1.html',
+        language: 'en'
+      }
+    end
+
+    before do
+      create_document(document1_params, document_repository)
+      create_document(document2_params, document_repository)
+    end
+  end
+
   before do
+    # FIXME: do this more efficiently
     ES.client.indices.delete(index: index_name, ignore_unavailable: true)
     document_repository.create_index!
   end
@@ -27,23 +48,7 @@ describe CollectionStats do
     end
 
     context 'when documents are associated with the collection' do
-      let(:document1_params) do
-        {
-          path: 'https://agency.gov/1.html',
-          language: 'en'
-        }
-      end
-      let(:document2_params) do
-        {
-          path: 'https://agency.gov/1.html',
-          language: 'en'
-        }
-      end
-
-      before do
-        create_document(document1_params, document_repository)
-        create_document(document2_params, document_repository)
-      end
+      include_context 'when documents are associated with the collection'
 
       it 'returns the number of documents' do
         expect(document_total).to eq 2
