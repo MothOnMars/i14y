@@ -50,6 +50,8 @@ describe CollectionStats do
     subject(:document_total) { collection_stats.document_total }
 
     context 'by default' do
+      before { document_repository.refresh_index! }
+
       it { is_expected.to eq 0 }
     end
 
