@@ -41,6 +41,7 @@ RSpec.configure do |config|
   end
 
   config.after do
+    #FIXME - better index name
     clear_index('*documents*')
   end
 

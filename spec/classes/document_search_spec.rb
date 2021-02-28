@@ -116,8 +116,10 @@ describe DocumentSearch do
       let(:query) { 'uh oh' }
       let(:error) { StandardError.new('something went wrong') }
 
-#      before { allow(ES).to receive(:client).and_raise(error) }
-      before { allow(ES.client).to receive(:search).and_raise(error) }
+      before do
+        allow_any_instance_of(DocumentSearchResults).
+          to receive(:suggestion).and_raise(error)
+      end
 
       it 'returns a no results response' do
         expect(document_search_results.total).to eq(0)
