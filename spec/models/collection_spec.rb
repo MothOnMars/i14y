@@ -34,6 +34,36 @@ describe Collection do
   describe '#last_document_sent' do
     subject(:last_document_sent) { collection.last_document_sent }
 
+    context 'when documents exist for the collection' do
+      let(:document1) do
+        Document.new(title: 'title', language: 'en', path: 'https://agency.gov/')
+      end
+      let(:document2) do
+        Document.new(title: 'title', language: 'en', path: 'https://agency.gov/')
+      end
+
+      before do
+        collection.document_repository.save(document1)
+                ES.client.update(
+          index: documents_index_name,
+          id: id,
+          body: {
+            doc: {
+              updated_at: 1.year.ago,
+              created_at: 1.year.ago
+            }
+          },
+          type: '_doc'
+        )
+        collection.document_repository.save(document2)
+        collection.document_repository.refresh_index!
+      end
+
+      it 'returns the time the most recent document was updated' do
+        expect(last_document_sent).to eq document2.updated_at.to_s
+      end
+    end
+
     context 'when something goes wrong' do
       before do
         allow_any_instance_of(DocumentRepository).
