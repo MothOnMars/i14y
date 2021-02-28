@@ -4,8 +4,15 @@ require 'rails_helper'
 
 describe CollectionStats do
   let(:collection) { Collection.new(id: 'agency_blogs', token: 'token') }
+  let(:index_name) { DocumentRepository.index_namespace('agency_blogs') }
+  let(:document_repository) { DocumentRepository.new(index_name: index_name) }
   let(:collection_stats) { CollectionStats.new(collection) }
- 
+
+  before do
+    ES.client.indices.delete(index: index_name, ignore_unavailable: true)
+    document_repository.create_index!
+  end
+
   describe 'initialization' do
     it 'requires a collection' do
       expect { CollectionStats.new }.to raise_error ArgumentError
@@ -20,10 +27,6 @@ describe CollectionStats do
     end
 
     context 'when documents are associated with the collection' do
-      let(:index_name) { DocumentRepository.index_namespace('agency_blogs') }
-      let(:document_repository) do
-        DocumentRepository.new(index_name: index_name)
-      end
       let(:document1_params) do
         {
           path: 'https://agency.gov/1.html',
