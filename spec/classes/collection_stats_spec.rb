@@ -49,7 +49,7 @@ describe CollectionStats do
   describe '#document_total' do
     subject(:document_total) { collection_stats.document_total }
 
-    describe 'by default' do
+    context 'by default' do
       it { is_expected.to eq 0 }
     end
 
@@ -65,7 +65,9 @@ describe CollectionStats do
   describe '#last_document_sent' do
     subject(:last_document_sent) { collection_stats.last_document_sent }
 
-    describe 'by default' do
+    before { document_repository.refresh_index! }
+
+    context 'by default' do
       it { is_expected.to be nil }
     end
 
