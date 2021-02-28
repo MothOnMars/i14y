@@ -53,7 +53,7 @@ jobs:
           command: |
             bundle exec rake i14y:setup
             ./cc-test-reporter before-build
-            bundle exec rspec spec
+            bundle exec rspec spec/classes/collection_stats_spec.rb
             ./cc-test-reporter after-build --exit-code $?
       - store_artifacts:
           path: coverage
