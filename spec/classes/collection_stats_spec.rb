@@ -36,6 +36,10 @@ describe CollectionStats do
     document_repository.create_index!
   end
 
+  after do
+    ES.client.indices.delete(index: index_name, ignore_unavailable: true)
+  end
+
   describe 'initialization' do
     it 'requires a collection' do
       expect { CollectionStats.new }.to raise_error ArgumentError

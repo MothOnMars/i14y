@@ -19,6 +19,8 @@ class CollectionStats
     )
     document_repository.search(size:1, sort: { updated_at: "desc"}).
       results.first.updated_at.utc.to_s
+  rescue
+    nil
   end
 end
 
