@@ -1,6 +1,7 @@
 # frozen_string_literal: true
 
 class Collection
+  # FIXME: delete?
   include ActiveModel::Serializers::JSON
   include ActiveModel::Validations
   include Virtus.model
