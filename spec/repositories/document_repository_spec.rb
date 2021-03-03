@@ -85,7 +85,17 @@ describe DocumentRepository do
     context 'when the index exists' do
       before { repository.create_index! }
 
+      after { repository.delete_index! }
+
       it { is_expected.to eq 0 }
+
+      context 'when the index contains documents' do
+        before { repository.save({ foo: 'bar' }, refresh: true) }
+
+        it 'returns the number of documents in the index' do
+          expect(es6_count).to eq 1
+        end
+      end
     end
   end
 end
