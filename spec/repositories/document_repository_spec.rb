@@ -21,7 +21,7 @@ describe DocumentRepository do
     end
   end
 
-  describe '.serialize' do
+  describe '#serialize' do
     subject(:serialize) { repository.serialize(document) }
 
     let(:document) do
@@ -58,8 +58,11 @@ describe DocumentRepository do
       end
 
       before do
+        repository.create_index!
         create_document(document_params, repository)
       end
+
+      after { repository.delete_index! }
 
       it 'deserializes the document' do
         document = repository.find('a123')
@@ -73,6 +76,16 @@ describe DocumentRepository do
         expect(document.tags).to eq(%w[this that])
         expect(document.click_count).to eq(5)
       end
+    end
+  end
+
+  describe 'es6_count' do
+    subject(:es6_count) { repository.es6_count }
+
+    context 'when the index exists' do
+      before { repository.create_index! }
+
+      it { is_expected.to eq 0 }
     end
   end
 end
