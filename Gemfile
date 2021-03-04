@@ -12,8 +12,8 @@ gem 'capistrano-rails', '~> 1.3'
 gem 'capistrano-bundler', '~> 1.2'
 gem 'capistrano-passenger', '~> 0.2.0'
 
-gem "elasticsearch-persistence", '~> 6.0'
-gem 'elasticsearch', '~> 6.0'
+gem "elasticsearch-persistence", '~> 7.0'
+gem 'elasticsearch', '~> 7.0'
 # Using fork until https://github.com/elastic/elasticsearch-ruby/issues/1150
 # is resolved
 gem 'elasticsearch-dsl', git: 'https://github.com/MothOnMars/elasticsearch-ruby',

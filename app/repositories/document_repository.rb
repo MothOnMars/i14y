@@ -16,11 +16,4 @@ class DocumentRepository
                                                doc_hash['language'])
     klass.new deserialized_hash
   end
-
-  def es6_count
-    # This method exists to ensure compatibility with both ES 6 and 7.
-    # Once we no longer need support for ES 6, this can be replaced by the
-    # standard DocumentRepository#count method.
-    count
-  end
 end

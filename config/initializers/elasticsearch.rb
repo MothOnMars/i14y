@@ -4,7 +4,7 @@ module ES
   CONFIG = Rails.application.config_for(:elasticsearch).freeze
 
   def self.client
-    Elasticsearch::Client.new(log: Rails.env.development?,
+    Elasticsearch::Client.new(log: true, #Rails.env.development?,
                               hosts: CONFIG['hosts'],
                               user: CONFIG['user'],
                               password: CONFIG['password'],
@@ -18,9 +18,7 @@ module ES
   end
 end
 
-if Rails.env.development?
   logger = ActiveSupport::Logger.new(STDERR)
-  logger.level = Logger::DEBUG
+  logger.level = Logger::WARN
   logger.formatter = proc { |_s, _d, _p, m| "\e[2m#{m}\n\e[0m" }
   ES.client.transport.logger = logger
-end

@@ -4,7 +4,7 @@ module TestServices
   module_function
 
   def create_collections_index
-    ES.client.indices.create(index: collections_index_name)
+    ES.client.indices.create(index: collections_index_name, include_type_name: true)
     ES.client.indices.put_alias(
       index: collections_index_name,
       name: ES.collection_repository.index_name
@@ -18,8 +18,9 @@ module TestServices
   def clear_index(index_name)
     ES.client.delete_by_query(
       index: index_name,
-      q: '*:*',
-      conflicts: 'proceed'
+      body: {query: {match_all: {}}},
+      conflicts: 'proceed',
+      refresh: true
     )
   end
 

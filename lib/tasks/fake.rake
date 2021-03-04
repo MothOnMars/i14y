@@ -7,6 +7,7 @@ namespace :fake do
     index_name = DocumentRepository.index_namespace(args[:index_name])
     repository = DocumentRepository.new(index_name: index_name)
     count = args[:document_count].to_i
+    repository.create_index!( include_type_name: true)
     count.times { repository.save(fake_doc) }
     repository.refresh_index!
   end
