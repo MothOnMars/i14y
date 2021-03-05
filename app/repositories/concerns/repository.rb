@@ -11,6 +11,7 @@ module Repository
 
     extend NamespacedIndex
 
+    document_type '_doc'
     client ES.client
     settings number_of_shards: 1, number_of_replicas: 1
   end

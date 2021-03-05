@@ -49,10 +49,8 @@ module API
           error!(collection.errors.messages, 400) unless collection.valid?
           ES.collection_repository.save(collection)
           documents_index_name = [DocumentRepository.index_namespace(handle), 'v1'].join('-')
-          DocumentRepository.new.create_index!(
-            index: documents_index_name,
-            include_type_name: true
-          )
+          puts 'creating documents index'
+          DocumentRepository.new.create_index!( index: documents_index_name, include_type_name: true)
           ES.client.indices.put_alias(
             index: documents_index_name,
             name: DocumentRepository.index_namespace(handle)
@@ -140,7 +138,11 @@ module API
         get ':handle' do
           handle = params.delete(:handle)
           collection = ES.collection_repository.find(handle)
-          { status: 200, developer_message: "OK" }.merge(collection.as_json(root: true, methods: [:document_total, :last_document_sent]))
+          document_repository = DocumentRepository.new(
+            index_name: DocumentRepository.index_namespace(handle)
+          )
+          { status: 200, developer_message: "OK" }.merge(
+            collection.as_json(root: true, methods: [:document_total, :last_document_sent]))
         end
       end
     end
